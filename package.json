@@ -24,29 +24,9 @@
   "keywords": ["f1", "formula1", "f1tv", "multiviewer", "livetiming", "macos", "windows", "linux", "2026", "hobby"],
   "author": "rhmhendriks (fork of MRAJEKO/UF1-Viewer)",
   "license": "MIT",
-  "config": {
-    "forge": {
-      "packagerConfig": {},
-      "makers": [
-        {
-          "name": "@electron-forge/maker-deb",
-          "config": {
-            "options": {
-              "maintainer": "rhmhendriks",
-              "homepage": "https://github.com/rhmhendriks/UF1-Viewer-with-F1MV-2026"
-            }
-          }
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
-        }
-      ]
-    }
-  },
   "dependencies": {
-    "@nivo/bullet": "^0.80.0",
-    "@nivo/line": "^0.80.0",
+    "@nivo/bullet": "^0.99.0",
+    "@nivo/line": "^0.99.0",
     "discord-rpc": "^4.0.1",
     "electron-fetch": "^1.9.1",
     "electron-reload": "^2.0.0-alpha.1",
@@ -61,16 +41,10 @@
     "@babel/core": "^7.20.12",
     "@babel/preset-env": "^7.20.2",
     "@babel/preset-react": "^7.18.6",
-    "@electron-forge/cli": "^7.3.0",
-    "@electron-forge/maker-deb": "^7.3.0",
-    "@electron-forge/maker-rpm": "^7.3.0",
-    "@electron-forge/maker-squirrel": "^7.3.0",
-    "@electron-forge/maker-zip": "^7.3.0",
     "babel-loader": "^9.1.2",
     "css-loader": "^6.7.3",
-    "electron": "^28.3.3",
-    "electron-builder": "^24.13.3",
-    "electron-packager": "^17.1.2",
+    "electron": "^35.0.0",
+    "electron-builder": "^26.8.1",
     "style-loader": "^3.3.1",
     "webpack": "^5.91.0",
     "webpack-cli": "^5.1.4"
