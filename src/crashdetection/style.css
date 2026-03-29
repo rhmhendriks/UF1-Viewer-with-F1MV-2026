@@ -1,8 +1,8 @@
 /* ── Crash Detection – FOM flat ── */
 
-* { margin: 0; padding: 0; overflow: hidden; box-sizing: border-box; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-body { height: 100vh; background: var(--f1-panel, #15151A); border-radius: 2px; }
+body { height: 100vh; background: var(--f1-panel, #15151A); border-radius: 2px; overflow: hidden; display: flex; flex-direction: column; }
 .drag { -webkit-app-region: drag; }
 
 h1 {
@@ -29,7 +29,8 @@ h1::before { content: "\26A0"; font-size: 5vw; color: var(--f1-text-3, rgba(255,
 
 #list {
     display: flex; flex-direction: column-reverse;
-    width: 100vw; list-style: none; padding: 0 3vw; gap: 2vw;
+    width: 100vw; list-style: none; padding: 2vw 3vw; gap: 2vw;
+    overflow-y: auto; flex: 1;
 }
 
 #list li {
@@ -40,10 +41,10 @@ h1::before { content: "\26A0"; font-size: 5vw; color: var(--f1-text-3, rgba(255,
     border-left: 3px solid var(--f1-text-3, rgba(255,255,255,0.30));
     background: var(--f1-panel, #15151A);
     display: flex; align-items: center; gap: 3vw; padding: 0 3.5vw;
-    transition: max-height 0.35s ease-out, opacity 0.35s ease-out, margin 0.35s ease;
+    transition: max-height 0.35s ease-out, opacity 0.35s ease-out, margin 0.35s ease, padding 0.35s ease;
 }
 
-li.show { margin-bottom: 0; max-height: 14vw !important; opacity: 1; }
+li.show { margin-bottom: 0; max-height: 16vw !important; opacity: 1; padding: 2vw 3.5vw; }
 
 #list li .driver-headshot {
     width: 9vw; height: 9vw; border-radius: 50%;

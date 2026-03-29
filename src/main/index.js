@@ -470,7 +470,8 @@ async function isConnected(ignore) {
 
             await getConfigurations(host, port, configFile);
 
-            if ((await f1mvApi.LiveTimingAPIGraphQL(config, "SessionInfo")) !== null) {
+            const liveTimingSession = await f1mvClient.getLiveTimingState("SessionInfo", config.host, config.port);
+            if (liveTimingSession && liveTimingSession.SessionInfo) {
                 if (rpc) {
                     require("./RPC.js");
                 }

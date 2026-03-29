@@ -8,7 +8,7 @@ const fetch = require("electron-fetch").default;
 
 const f1mvApi = require("npm_f1mv_api");
 
-require("electron-reload")(__dirname);
+try { require("electron-reload")(__dirname); } catch (_) { /* dev-only hot-reload; safe to skip */ }
 
 const defaults = {
   config: {
