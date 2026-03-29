@@ -10,6 +10,8 @@ const sleep = (milliseconds) => {
 };
 
 let crashCount = 0;
+let driverCrashTime = {};  // { num: Date.now() } — when driver was added to crash list
+let driverCrashSector = {}; // { num: sector } — sector where crash detected
 async function getConfigurations() {
     const configFile = (await ipcRenderer.invoke("get_store")).config;
     host = configFile.network.host;
@@ -183,7 +185,32 @@ async function run() {
             if (driverCarData !== "error") {
                 const HTMLDisplayList = document.getElementById("list");
 
+                const timingLine = timingData[driverNumber] || {};
+                const isRetired = timingLine.Retired === true;
+                const isStopped = timingLine.Stopped === true;
+                const crashTimeSinceStart = driverCrashTime[driverNumber] ? Date.now() - driverCrashTime[driverNumber] : 0;
+                const showMinimumExpired = crashTimeSinceStart > 30000; // 30 seconds
+                const maxDisplayExpired = crashTimeSinceStart > 300000; // 5 minutes max display
+
                 const driverElement = document.getElementById(driverNumber);
+
+                // If driver is retired/stopped OR max display time exceeded, remove (but respect 30s minimum)
+                if ((isRetired || isStopped || maxDisplayExpired) && driverElement !== null) {
+                    if (showMinimumExpired) {
+                        document.getElementById(driverNumber).className = "";
+                        await sleep(400);
+                        driverElement.remove();
+                        delete driverCrashTime[driverNumber];
+                        delete driverCrashSector[driverNumber];
+                    }
+                    // else: keep showing for minimum 30 seconds
+                    continue;
+                }
+
+                // Don't add already-retired/stopped drivers to crash list
+                if ((isRetired || isStopped) && driverElement === null) {
+                    continue;
+                }
 
                 let crashed = false;
                 try {
@@ -204,15 +231,23 @@ async function run() {
                         const firstName = driverInfo.FirstName || "";
                         const lastName = driverInfo.LastName ? driverInfo.LastName.toUpperCase() : driverInfo.Tla;
 
+                        // Detect current sector
+                        const sectors = timingLine.Sectors || [];
+                        let currentSector = sectors.length;
+                        if (currentSector === 0) currentSector = 1; // default to sector 1 if no data
+                        driverCrashSector[driverNumber] = currentSector;
+                        const sectorStr = currentSector <= 3 ? `S${currentSector}` : `S${currentSector}`;
+
                         newDriverElement.innerHTML = `
                             <img class="driver-headshot" src="${headshotUrl}" alt="${lastName}" onerror="this.src='https://media.formula1.com/d_driver_fallback_image.png/content/dam/fom-website/drivers/fallback/fallback.png.transform/1col/image.png'" />
                             <div class="driver-info">
                                 <span class="driver-name">${firstName ? `<span style="font-size:0.75em;opacity:0.70">${firstName} </span>` : ""}${lastName}</span>
-                                <span class="driver-number"># ${driverNumber}</span>
+                                <span class="driver-number"># ${driverNumber} · ${sectorStr}</span>
                             </div>
                             <span class="crash-icon">⚠</span>
                         `;
                         HTMLDisplayList.appendChild(newDriverElement);
+                        driverCrashTime[driverNumber] = Date.now();
                         await sleep(10);
                         newDriverElement.className = "show";
                     }
@@ -220,11 +255,15 @@ async function run() {
                     console.log(name + " has crashed");
                 } else {
                     if (driverElement !== null) {
-                        document.getElementById(driverNumber).className = "";
-
-                        await sleep(400);
-
-                        driverElement.remove();
+                        // Remove if 30 seconds have passed and no longer crashed
+                        if (showMinimumExpired) {
+                            document.getElementById(driverNumber).className = "";
+                            await sleep(400);
+                            driverElement.remove();
+                            delete driverCrashTime[driverNumber];
+                            delete driverCrashSector[driverNumber];
+                        }
+                        // else: keep showing for minimum 30 seconds
                     }
                 }
             }

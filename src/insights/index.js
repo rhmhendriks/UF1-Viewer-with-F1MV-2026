@@ -16,6 +16,7 @@ let prevWeather = null;
 let shownInsights = new Set();
 let insightId = 0;
 let currentTrackStatus = "1"; // 1=green, 4=SC, 6=VSC, 7=VSC ending
+let currentLapNumber = 1;
 
 // ── Tire / Pit window tracking ────────────────────────────────────────────────
 // Lap counts at which a pit window OPENS per compound (tire age in laps)
@@ -26,6 +27,7 @@ const COMPOUND_COLOR   = { SOFT: "#E8002D", MEDIUM: "#FFF200", HARD: "#FFFFFF", 
 
 let driverStintData   = {};  // { num: { stintCount, compound, currentAge } }
 let driverPitEnterAt  = {};  // { num: timestamp when InPit became true }
+let driverPitPosition = {};  // { num: position when entering pit }
 let prevInPit         = {};  // { num: bool }
 let pitWindowAlerted  = new Set();  // "${compound}-${age}"  (grouped key)
 let pitOverdueAlerted = new Set();  // "${num}-${compound}-${band}"
@@ -257,8 +259,8 @@ function analyzePace(timingData, timingStats) {
             const pb = stats.PersonalBestLapTime;
             if (!pb?.Value) continue;
 
-            // Personal fastest lap (silent entry)
-            if (pb.Value !== prevPersonalBest[num]) {
+            // Personal fastest lap (silent entry) — only after lap 1
+            if (pb.Value !== prevPersonalBest[num] && currentLapNumber > 1) {
                 prevPersonalBest[num] = pb.Value;
                 if (!isSafetyCar()) {
                     addInsight("pace", "PERSONAL BEST",
@@ -295,6 +297,9 @@ function analyzePitEntry(timingData) {
         const curInPit = data.InPit === true;
         if (prevInPit[num] !== undefined && !prevInPit[num] && curInPit) {
             driverPitEnterAt[num] = Date.now();
+            driverPitPosition[num] = parseInt(data.Position) || 0;
+            addInsight("pit", "PIT IN",
+                `<strong>${driverTag(num)}</strong> — P${driverPitPosition[num]} entering the pit lane`);
         }
         prevInPit[num] = curInPit;
     }
@@ -339,6 +344,7 @@ function analyzeTiresAndPits(timingAppData, timingData) {
                         : `<strong>${Math.abs(delta)}</strong> laps early`;
 
                 let pitDurStr = "";
+                let posLossStr = "";
                 if (driverPitEnterAt[num]) {
                     const durSec = Math.round((Date.now() - driverPitEnterAt[num]) / 1000);
                     if (durSec > 1 && durSec < 120) {
@@ -347,8 +353,17 @@ function analyzeTiresAndPits(timingAppData, timingData) {
                     delete driverPitEnterAt[num];
                 }
 
-                addInsight("tires", "PIT STOP",
-                    `<strong>${driverTag(num)}</strong> (P${pos}) ${compoundBadge(prevCompound)} → ${compoundBadge(compound)} · <strong>${prevAge} laps</strong> · ${deltaStr}${pitDurStr}`);
+                // Calculate position loss
+                const pitInPos = driverPitPosition[num];
+                const curPos = parseInt(pos);
+                if (pitInPos && curPos && curPos > pitInPos) {
+                    const loss = curPos - pitInPos;
+                    posLossStr = ` — lost <strong>${loss}</strong> positions`;
+                }
+                delete driverPitPosition[num];
+
+                addInsight("tires", "PIT OUT",
+                    `<strong>${driverTag(num)}</strong> (P${pos}) ${compoundBadge(prevCompound)} → ${compoundBadge(compound)} · <strong>${prevAge} laps</strong> · ${deltaStr}${pitDurStr}${posLossStr}`);
                 playPitPling();
 
                 // Reset window alerts so new stint gets fresh tracking
@@ -570,6 +585,7 @@ async function run() {
 
             driverList = api.DriverList || driverList;
             currentTrackStatus = api.TrackStatus?.Status || currentTrackStatus;
+            currentLapNumber = parseInt(api.LapCount?.CurrentLap) || currentLapNumber;
 
             // Run all analyses
             analyzeGapTrends(api.TimingData);
