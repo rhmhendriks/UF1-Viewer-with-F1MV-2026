@@ -19,8 +19,7 @@
     "dist:dmg": "electron-builder --mac dmg",
     "dist:win": "electron-builder --win",
     "dist:exe": "electron-builder --win nsis",
-    "dist:all": "electron-builder --mac --win --linux",
-    "postinstall": "electron-builder install-app-deps"
+    "dist:all": "electron-builder --mac --win --linux"
   },
   "keywords": ["f1", "formula1", "f1tv", "multiviewer", "livetiming", "macos", "windows", "linux", "2026", "hobby"],
   "author": "rhmhendriks (fork of MRAJEKO/UF1-Viewer)",
@@ -74,7 +73,7 @@
     "babel-loader": "^9.1.2",
     "css-loader": "^6.7.3",
     "electron": "^28.0.0",
-    "electron-builder": "^24.0.0-alpha.9",
+    "electron-builder": "^24.13.3",
     "electron-packager": "^16.0.0",
     "style-loader": "^3.3.1",
     "webpack": "^5.75.0",
