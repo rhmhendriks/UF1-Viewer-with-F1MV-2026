@@ -15,6 +15,7 @@ let prevGaps = {};
 let prevWeather = null;
 let shownInsights = new Set();
 let insightId = 0;
+let currentTrackStatus = "1"; // 1=green, 4=SC, 6=VSC, 7=VSC ending
 
 // ── Tire / Pit window tracking ────────────────────────────────────────────────
 // Lap counts at which a pit window OPENS per compound (tire age in laps)
@@ -26,15 +27,20 @@ const COMPOUND_COLOR   = { SOFT: "#E8002D", MEDIUM: "#FFF200", HARD: "#FFFFFF", 
 let driverStintData   = {};  // { num: { stintCount, compound, currentAge } }
 let driverPitEnterAt  = {};  // { num: timestamp when InPit became true }
 let prevInPit         = {};  // { num: bool }
-let pitWindowAlerted  = new Set();  // "${num}-${compound}"
+let pitWindowAlerted  = new Set();  // "${compound}-${age}"  (grouped key)
 let pitOverdueAlerted = new Set();  // "${num}-${compound}-${band}"
 let prevSectorBests   = {};  // { num: { 0: position, 1: position, 2: position } }
 let prevLappedState   = {};  // { num: bool } — whether driver was already lapped
 let prevRetiredState  = {};  // { num: bool } — whether driver was already retired
+let prevPersonalBest  = {};  // { num: time string } — previous personal best lap time
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 // ── Helpers ──
+
+function isSafetyCar() {
+    return currentTrackStatus === "4" || currentTrackStatus === "6" || currentTrackStatus === "7";
+}
 
 function driverTag(num) {
     const d = driverList[String(num)];
@@ -69,6 +75,12 @@ function timeToSeconds(timeStr) {
 function nowTimeString() {
     const d = new Date();
     return d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+}
+
+function windDirectionStr(degrees) {
+    const dirs = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
+    const idx = Math.round(parseFloat(degrees) / 22.5) % 16;
+    return dirs[idx] || `${degrees}°`;
 }
 
 // ── UI ──
@@ -116,7 +128,7 @@ function playPitPling() {
             osc.type = "sine";
             osc.frequency.value = freq;
             const t = ctx.currentTime + offset;
-            gain.gain.setValueAtTime(0.35, t);
+            gain.gain.setValueAtTime(0.75, t);
             gain.gain.exponentialRampToValueAtTime(0.001, t + 0.35);
             osc.start(t); osc.stop(t + 0.35);
         });
@@ -133,7 +145,7 @@ function playFastestLapSound() {
             osc.type = "triangle";
             osc.frequency.value = freq;
             const t = ctx.currentTime + offset;
-            gain.gain.setValueAtTime(0.28, t);
+            gain.gain.setValueAtTime(0.65, t);
             gain.gain.exponentialRampToValueAtTime(0.001, t + 0.28);
             osc.start(t); osc.stop(t + 0.28);
         });
@@ -150,7 +162,7 @@ function playRetireSound() {
             osc.type = "sine";
             osc.frequency.value = freq;
             const t = ctx.currentTime + offset;
-            gain.gain.setValueAtTime(0.18, t);
+            gain.gain.setValueAtTime(0.50, t);
             gain.gain.exponentialRampToValueAtTime(0.001, t + 0.45);
             osc.start(t); osc.stop(t + 0.45);
         });
@@ -170,6 +182,8 @@ async function getConfigurations() {
 
 function analyzeGapTrends(timingData) {
     if (!timingData?.Lines) return;
+    if (isSafetyCar()) return; // Gaps not meaningful under SC/VSC
+
     const lines = timingData.Lines;
 
     for (const [num, data] of Object.entries(lines)) {
@@ -241,8 +255,19 @@ function analyzePace(timingData, timingStats) {
     if (timingStats?.Lines) {
         for (const [num, stats] of Object.entries(timingStats.Lines)) {
             const pb = stats.PersonalBestLapTime;
-            if (pb?.Value && pb?.Position === 1) {
-                // Session fastest lap
+            if (!pb?.Value) continue;
+
+            // Personal fastest lap (silent entry)
+            if (pb.Value !== prevPersonalBest[num]) {
+                prevPersonalBest[num] = pb.Value;
+                if (!isSafetyCar()) {
+                    addInsight("pace", "PERSONAL BEST",
+                        `<strong>${driverTag(num)}</strong> set a personal best: <strong>${pb.Value}</strong>`);
+                }
+            }
+
+            // Session fastest lap (with sound, skip under SC)
+            if (pb.Position === 1 && !isSafetyCar()) {
                 if (addInsight("pace", "FASTEST LAP",
                     `<strong>${driverTag(num)}</strong> set the fastest lap: <strong>${pb.Value}</strong>`)) {
                     playFastestLapSound();
@@ -251,12 +276,14 @@ function analyzePace(timingData, timingStats) {
         }
     }
 
-    // Detect if someone in lower positions has top-3 pace
-    for (const lap of bestLaps.slice(0, 3)) {
-        const pos = lines[lap.num]?.Position;
-        if (pos && parseInt(pos) > 10) {
-            addInsight("pace", "HIDDEN PACE",
-                `<strong>${driverTag(lap.num)}</strong> (P${pos}) logged <strong>${lap.time}</strong> — top-3 pace from outside the top 10`);
+    // Detect if someone in lower positions has top-3 pace (skip under SC)
+    if (!isSafetyCar()) {
+        for (const lap of bestLaps.slice(0, 3)) {
+            const pos = lines[lap.num]?.Position;
+            if (pos && parseInt(pos) > 10) {
+                addInsight("pace", "HIDDEN PACE",
+                    `<strong>${driverTag(lap.num)}</strong> (P${pos}) logged <strong>${lap.time}</strong> — top-3 pace from outside the top 10`);
+            }
         }
     }
 }
@@ -275,6 +302,9 @@ function analyzePitEntry(timingData) {
 
 function analyzeTiresAndPits(timingAppData, timingData) {
     if (!timingAppData?.Lines || !timingData?.Lines) return;
+
+    // Collect pit window data for grouping
+    const pitWindowGroups = {}; // { "COMPOUND-age": [driverTag, ...] }
 
     for (const [num, appData] of Object.entries(timingAppData.Lines)) {
         const stints = appData.Stints;
@@ -328,14 +358,15 @@ function analyzeTiresAndPits(timingAppData, timingData) {
                 }
 
             } else if (compound === prev.compound && !isRetired) {
-                // ── Same stint — check pit window ────────────────────────────────
+                // ── Same stint — check pit window (group by compound+age) ────
                 const windowOpen  = PIT_WINDOW_OPEN[compound];
                 const expectedMax = PIT_EXPECTED_MAX[compound] ?? 0;
 
                 if (windowOpen && tireAge >= windowOpen && !pitWindowAlerted.has(`${num}-${compound}`)) {
                     pitWindowAlerted.add(`${num}-${compound}`);
-                    addInsight("pit", "PIT WINDOW OPEN",
-                        `<strong>${driverTag(num)}</strong> (P${pos}) ${compoundBadge(compound)} — <strong>${tireAge} laps</strong>, pit window now open`);
+                    const groupKey = `${compound}-${tireAge}`;
+                    if (!pitWindowGroups[groupKey]) pitWindowGroups[groupKey] = [];
+                    pitWindowGroups[groupKey].push({ num, pos });
                 }
 
                 if (expectedMax && tireAge > expectedMax) {
@@ -352,10 +383,27 @@ function analyzeTiresAndPits(timingAppData, timingData) {
 
         driverStintData[num] = { stintCount, compound, currentAge: tireAge };
     }
+
+    // Emit grouped pit window alerts
+    for (const [groupKey, drivers] of Object.entries(pitWindowGroups)) {
+        const [compound, ageStr] = groupKey.split("-");
+        const age = parseInt(ageStr);
+        if (drivers.length === 1) {
+            const d = drivers[0];
+            addInsight("pit", "PIT WINDOW OPEN",
+                `<strong>${driverTag(d.num)}</strong> (P${d.pos}) ${compoundBadge(compound)} — <strong>${age} laps</strong>, pit window now open`);
+        } else {
+            const tags = drivers.map(d => `<strong>${driverTag(d.num)}</strong>`).join(", ");
+            addInsight("pit", "PIT WINDOW OPEN",
+                `${tags} — ${compoundBadge(compound)} <strong>${age} laps</strong>, pit window now open`);
+        }
+    }
 }
 
 function analyzeSectors(timingStats) {
     if (!timingStats?.Lines) return;
+    if (isSafetyCar()) return; // Sector times not meaningful under SC/VSC
+
     for (const [num, stats] of Object.entries(timingStats.Lines)) {
         const sectors = stats.BestSectors;
         if (!Array.isArray(sectors)) continue;
@@ -381,12 +429,13 @@ function analyzeWeather(weatherData) {
     const airTemp = parseFloat(weatherData.AirTemp);
     const humidity = parseFloat(weatherData.Humidity);
     const wind = parseFloat(weatherData.WindSpeed);
+    const windDir = parseFloat(weatherData.WindDirection);
 
     if (prevWeather) {
         // Rain state change
         const wasRaining = prevWeather.Rainfall === "1" || prevWeather.Rainfall === true;
         if (rain && !wasRaining) {
-            addInsight("weather", "RAIN DETECTED",
+            addInsight("weather", "RAIN STARTED",
                 `Rainfall has started — track conditions changing. Track: <strong>${trackTemp}°C</strong>, Air: <strong>${airTemp}°C</strong>`);
         } else if (!rain && wasRaining) {
             addInsight("weather", "RAIN STOPPED",
@@ -403,10 +452,31 @@ function analyzeWeather(weatherData) {
             }
         }
 
-        // High wind
-        if (wind >= 30) {
+        // Significant wind speed change (>= 10 km/h delta)
+        const prevWind = parseFloat(prevWeather.WindSpeed);
+        if (!isNaN(prevWind) && !isNaN(wind)) {
+            const windDelta = wind - prevWind;
+            if (Math.abs(windDelta) >= 10) {
+                addInsight("weather", "WIND CHANGE",
+                    `Wind ${windDelta > 0 ? "picked up" : "dropped"} to <strong>${wind.toFixed(0)} km/h</strong> (${windDelta > 0 ? "+" : ""}${windDelta.toFixed(0)}) from ${windDirectionStr(windDir)}`);
+            }
+        }
+
+        // Significant wind direction change (>= 45°)
+        const prevWindDir = parseFloat(prevWeather.WindDirection);
+        if (!isNaN(prevWindDir) && !isNaN(windDir)) {
+            let dirDelta = Math.abs(windDir - prevWindDir);
+            if (dirDelta > 180) dirDelta = 360 - dirDelta;
+            if (dirDelta >= 45 && wind >= 5) {
+                addInsight("weather", "WIND SHIFT",
+                    `Wind direction shifted to <strong>${windDirectionStr(windDir)}</strong> (${wind.toFixed(0)} km/h) — crosswind/headwind may change`);
+            }
+        }
+
+        // High wind alert (one-off at 30+ km/h)
+        if (wind >= 30 && prevWind < 30) {
             addInsight("weather", "HIGH WIND",
-                `Wind speed at <strong>${wind} km/h</strong> — may affect aero performance in high-speed corners`);
+                `Wind speed at <strong>${wind.toFixed(0)} km/h</strong> from ${windDirectionStr(windDir)} — may affect aero performance`);
         }
     }
 
@@ -494,10 +564,12 @@ async function run() {
                 "TimingAppData",
                 "TimingData",
                 "TimingStats",
+                "TrackStatus",
                 "WeatherData",
             ]);
 
             driverList = api.DriverList || driverList;
+            currentTrackStatus = api.TrackStatus?.Status || currentTrackStatus;
 
             // Run all analyses
             analyzeGapTrends(api.TimingData);

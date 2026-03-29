@@ -251,7 +251,7 @@ function playAlarmSound() {
             const t = ctx.currentTime + i * 0.28;
             osc.frequency.setValueAtTime(440, t);
             osc.frequency.setValueAtTime(330, t + 0.13);
-            gain.gain.setValueAtTime(0.4, t);
+            gain.gain.setValueAtTime(0.8, t);
             gain.gain.exponentialRampToValueAtTime(0.001, t + 0.27);
             osc.start(t); osc.stop(t + 0.27);
         }

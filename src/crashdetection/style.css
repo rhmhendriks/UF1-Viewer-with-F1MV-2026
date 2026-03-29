@@ -44,7 +44,7 @@ h1::before { content: "\26A0"; font-size: 5vw; color: var(--f1-text-3, rgba(255,
     transition: max-height 0.35s ease-out, opacity 0.35s ease-out, margin 0.35s ease, padding 0.35s ease;
 }
 
-li.show { margin-bottom: 0; max-height: 16vw !important; opacity: 1; padding: 2vw 3.5vw; }
+#list li.show { max-height: 16vw; opacity: 1; padding: 2vw 3.5vw; }
 
 #list li .driver-headshot {
     width: 9vw; height: 9vw; border-radius: 50%;
