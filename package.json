@@ -1,8 +1,8 @@
 {
-  "name": "uf1-viewer-ubuntu-2026",
+  "name": "uf1-viewer-2026",
   "productName": "UF1-Viewer-2026",
   "version": "2.1.0",
-  "description": "Ultimate F1 Viewer – 2026 Season Edition for Ubuntu/Linux. Works with MultiViewer for F1 (http://localhost:10101).",
+  "description": "Ultimate F1 Viewer – 2026 Season Edition. Cross-platform (macOS, Windows, Linux). Works with MultiViewer for F1 (http://localhost:10101).",
   "main": "./src/index.js",
   "scripts": {
     "start": "electron .",
@@ -15,10 +15,15 @@
     "dist": "electron-builder --linux",
     "dist:appimage": "electron-builder --linux AppImage",
     "dist:deb": "electron-builder --linux deb",
+    "dist:mac": "electron-builder --mac",
+    "dist:dmg": "electron-builder --mac dmg",
+    "dist:win": "electron-builder --win",
+    "dist:exe": "electron-builder --win nsis",
+    "dist:all": "electron-builder --mac --win --linux",
     "postinstall": "electron-builder install-app-deps"
   },
-  "keywords": ["f1", "formula1", "f1tv", "multiviewer", "livetiming", "ubuntu", "linux", "2026"],
-  "author": "MR. AJEKO",
+  "keywords": ["f1", "formula1", "f1tv", "multiviewer", "livetiming", "macos", "windows", "linux", "2026", "hobby"],
+  "author": "rhmhendriks (fork of MRAJEKO/UF1-Viewer)",
   "license": "MIT",
   "config": {
     "forge": {
@@ -28,8 +33,8 @@
           "name": "@electron-forge/maker-deb",
           "config": {
             "options": {
-              "maintainer": "MRAJEKO",
-              "homepage": "https://github.com/mrajeko/uf1-viewer"
+              "maintainer": "rhmhendriks",
+              "homepage": "https://github.com/rhmhendriks/UF1-Viewer-with-F1MV-2026"
             }
           }
         },
@@ -71,7 +76,6 @@
     "electron": "^28.0.0",
     "electron-builder": "^24.0.0-alpha.9",
     "electron-packager": "^16.0.0",
-    "electron-prebuilt-compile": "^1.3.2",
     "style-loader": "^3.3.1",
     "webpack": "^5.75.0",
     "webpack-cli": "^5.0.1"

@@ -1,6 +1,6 @@
 productName: "UF1-Viewer-2026"
-appId: "com.mrajeko.uf1.ubuntu2026"
-copyright: "Copyright © 2026 MRAJEKO"
+appId: "com.rhmhendriks.uf1viewer.2026"
+copyright: "Copyright © 2026 rhmhendriks (fork of MRAJEKO/UF1-Viewer)"
 
 generateUpdatesFilesForAllChannels: true
 asar: true
@@ -12,11 +12,61 @@ buildDependenciesFromSource: false
 directories:
     output: "out"
 
+# ── macOS ─────────────────────────────────────────────────────────────────────
+mac:
+    icon: "src/icons/windows/logo.png"
+    category: "public.app-category.utilities"
+    darkModeSupport: true
+    target:
+        - target: "dmg"
+          arch:
+              - x64
+              - arm64
+        - target: "zip"
+          arch:
+              - x64
+              - arm64
+
+dmg:
+    title: "UF1 Viewer 2026"
+    contents:
+        - x: 130
+          y: 220
+        - x: 410
+          y: 220
+          type: link
+          path: "/Applications"
+    window:
+        width: 540
+        height: 380
+
+# ── Windows ───────────────────────────────────────────────────────────────────
+win:
+    icon: "src/icons/windows/logo.png"
+    target:
+        - target: "nsis"
+          arch:
+              - x64
+              - arm64
+        - target: "portable"
+          arch:
+              - x64
+
+nsis:
+    oneClick: false
+    perMachine: false
+    allowElevation: true
+    allowToChangeInstallationDirectory: true
+    createDesktopShortcut: true
+    createStartMenuShortcut: true
+    shortcutName: "UF1 Viewer 2026"
+
+# ── Linux ─────────────────────────────────────────────────────────────────────
 linux:
     icon: "src/icons/windows/logo.png"
     category: "Utility"
-    maintainer: "MRAJEKO"
-    description: "Ultimate F1 Viewer – 2026 Season Edition for Ubuntu/Linux"
+    maintainer: "rhmhendriks"
+    description: "Ultimate F1 Viewer – 2026 Season Edition"
     desktop:
         Name: "UF1 Viewer 2026"
         GenericName: "Formula 1 Viewer"
