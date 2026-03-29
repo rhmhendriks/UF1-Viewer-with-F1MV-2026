@@ -68,11 +68,12 @@ linux:
     maintainer: "rhmhendriks"
     description: "Ultimate F1 Viewer – 2026 Season Edition"
     desktop:
-        Name: "UF1 Viewer 2026"
-        GenericName: "Formula 1 Viewer"
-        Comment: "Live timing overlay for Formula 1 – 2026 Season"
-        Categories: "Utility;Sports;"
-        Keywords: "F1;Formula1;Racing;Timing;"
+        entry:
+            Name: "UF1 Viewer 2026"
+            GenericName: "Formula 1 Viewer"
+            Comment: "Live timing overlay for Formula 1 – 2026 Season"
+            Categories: "Utility;Sports;"
+            Keywords: "F1;Formula1;Racing;Timing;"
     target:
         - target: "AppImage"
           arch:
