@@ -1,19 +1,29 @@
+/* ── Toast / Tooltip – FOM flat ── */
+
 #tooltip {
-    width: 60%;
-    position: fixed;
-    bottom: -100px;
-    left: 50%;
+    position: fixed; bottom: 80px; left: 50%;
     transform: translateX(-50%);
-    padding: 10px 20px;
-    border-radius: 30px;
-    border: 2px solid black;
-    transition: all 0.5s ease;
-    z-index: 4;
-    display: grid;
-    place-items: center;
-    color: rgb(41, 41, 41);
+    background: var(--f1-panel, #15151A);
+    border: 1px solid var(--f1-divider, rgba(255,255,255,0.07));
+    border-radius: 2px;
+    padding: 10px 18px;
+    display: flex; align-items: center; gap: 10px;
+    z-index: 999;
+    pointer-events: none;
+    opacity: 0; transition: opacity 0.25s ease;
 }
 
-#tooltip.show {
-    bottom: 20px !important;
+#tooltip.show { opacity: 1; }
+
+#tooltip p {
+    font-family: 'SFRegular', sans-serif;
+    font-size: 12px; color: var(--f1-text, #FFFFFF);
+    white-space: nowrap; margin: 0;
+}
+
+.tooltip-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #00D245;
+    flex-shrink: 0;
 }

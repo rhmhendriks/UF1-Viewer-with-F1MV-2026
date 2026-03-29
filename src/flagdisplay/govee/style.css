@@ -1,58 +1,34 @@
-/* Base styling */
-* {
-    margin: 0;
-    padding: 0;
-    color: white;
-}
+/* ── Govee Flag Controller – FOM flat ── */
 
-body {
-    height: 100vh;
-}
+* { margin: 0; padding: 0; color: #fff; box-sizing: border-box; }
+body { height: 100vh; background: transparent; }
 
 .container {
-    background-color: #0a0a0faf;
-    border-radius: 20px;
-    height: 100vh;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-evenly;
-    opacity: 1;
-    transition: all 0.5s ease;
+    background: var(--f1-panel, #15151A);
+    border-radius: 2px; height: 100vh; overflow: hidden;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: space-evenly;
+    opacity: 1; transition: all 0.3s var(--f1-ease, ease);
 }
 
-.transparent {
-    background-color: transparent;
-}
+.transparent { background-color: transparent; }
 
 .wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    height: 55vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: space-between; height: 55vh;
 }
 
-h1 {
-    font-family: "SFBold", Arial, Helvetica, sans-serif;
-    font-size: 25px;
-}
-
-h2 {
-    font-family: "SFBold", Arial, Helvetica, sans-serif;
-    font-size: 20px;
-}
+h1 { font-family: var(--f1-font, "SFBold", Arial, sans-serif); font-size: 25px; letter-spacing: 0.06em; text-transform: uppercase; }
+h2 { font-family: var(--f1-font, "SFBold", Arial, sans-serif); font-size: 20px; color: var(--f1-text-2, rgba(255,255,255,0.62)); }
 
 p {
-    color: green;
-    border: 2px solid green;
-    border-radius: 10px;
-    font-family: "SFRegular", Arial, Helvetica, sans-serif;
-    font-size: 30px;
-    padding: 4px 15px;
+    color: var(--f1-green, #00D245);
+    border: 1px solid var(--f1-green, #00D245);
+    border-radius: 2px;
+    font-family: var(--f1-font-reg, "SFRegular", Arial, sans-serif);
+    font-size: 30px; padding: 4px 15px;
+    background: rgba(0,210,69,0.08);
+    font-variant-numeric: tabular-nums;
 }
 
-.hide {
-    opacity: 0;
-}
+.hide { opacity: 0; }

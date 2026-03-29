@@ -1,5 +1,6 @@
 // Create all needed variables
-const { app, BrowserWindow, ipcMain, screen, session } = require("electron");
+const { app, BrowserWindow, ipcMain, shell, screen, session } = require("electron");
+const { spawn } = require("child_process");
 const path = require("path");
 const Store = require("electron-store");
 
@@ -45,30 +46,54 @@ const defaults = {
     black: [0, 0, 0],
   },
   team_icons: {
+    // 2026 F1 Teams
     Mercedes: "../icons/teams/mercedes.png",
+    "Mercedes-AMG Petronas F1 Team": "../icons/teams/mercedes.png",
 
     "Red Bull Racing": "../icons/teams/red-bull.png",
-
-    McLaren: "../icons/teams/mclaren-white.png",
-
-    "Force India": "../icons/teams/force-india.png",
-    "Racing Point": "../icons/teams/racing-point.png",
-    "Aston Martin": "../icons/teams/aston-martin.png",
-
-    Williams: "../icons/teams/williams-white.png",
-
-    "Toro Rosso": "../icons/teams/toro-rosso.png",
-    AlphaTauri: "../icons/teams/alpha-tauri.png",
-
-    Renault: "../icons/teams/renault.png",
-    Alpine: "../icons/teams/alpine.png",
+    "Oracle Red Bull Racing": "../icons/teams/red-bull.png",
 
     Ferrari: "../icons/teams/ferrari.png",
-    "Haas F1 Team": "../icons/teams/haas-red.png",
+    "Scuderia Ferrari HP": "../icons/teams/ferrari.png",
 
+    McLaren: "../icons/teams/mclaren-white.png",
+    "McLaren Formula 1 Team": "../icons/teams/mclaren-white.png",
+
+    "Aston Martin": "../icons/teams/aston-martin.png",
+    "Aston Martin Aramco F1 Team": "../icons/teams/aston-martin.png",
+
+    Alpine: "../icons/teams/alpine.png",
+    "BWT Alpine F1 Team": "../icons/teams/alpine.png",
+
+    Williams: "../icons/teams/williams-white.png",
+    "Williams Racing": "../icons/teams/williams-white.png",
+
+    // Racing Bulls (formerly AlphaTauri / VCARB)
+    "Racing Bulls": "../icons/teams/alpha-tauri.png",
+    "Visa Cash App Racing Bulls F1 Team": "../icons/teams/alpha-tauri.png",
+    AlphaTauri: "../icons/teams/alpha-tauri.png",
+    "Toro Rosso": "../icons/teams/toro-rosso.png",
+
+    // Cadillac (new 11th team in 2026)
+    Cadillac: "../icons/teams/alfa-romeo.png",
+    "Cadillac F1 Team": "../icons/teams/alfa-romeo.png",
+    "Andretti Cadillac": "../icons/teams/alfa-romeo.png",
+
+    // Audi F1 Team (formerly Kick Sauber / Sauber / Alfa Romeo)
+    Audi: "../icons/teams/alfa-romeo.png",
+    "Audi F1 Team": "../icons/teams/alfa-romeo.png",
+    "Kick Sauber": "../icons/teams/alfa-romeo.png",
     Sauber: "../icons/teams/alfa-romeo.png",
     "Alfa Romeo Racing": "../icons/teams/alfa-romeo.png",
     "Alfa Romeo": "../icons/teams/alfa-romeo.png",
+
+    "Haas F1 Team": "../icons/teams/haas-red.png",
+    MoneyGram: "../icons/teams/haas-red.png",
+
+    // Legacy teams
+    "Force India": "../icons/teams/force-india.png",
+    "Racing Point": "../icons/teams/racing-point.png",
+    Renault: "../icons/teams/renault.png",
   },
   internal_settings: {
     windows: {
@@ -238,6 +263,18 @@ const defaults = {
         aspectRatio: null,
         icon: "icons/windows/autoswitcher.png",
       },
+      insights: {
+        path: "insights/index.html",
+        width: 340,
+        height: 600,
+        frame: false,
+        hideMenuBar: true,
+        transparent: true,
+        hasShadow: false,
+        alwaysOnTop: null,
+        aspectRatio: null,
+        icon: "icons/windows/logo.png",
+      },
     },
     session: {
       getLiveSession: "https://api.jstt.me/api/v2/f1tv/live-session?joost.systems",
@@ -306,6 +343,14 @@ const store = new Store({
         "internal_settings.analytics.sendActiveUsers",
         "https://api.jstt.me/api/v2/uf1/analytics/active-users/post"
       );
+    },
+    // 2026 Ubuntu release: update team icons to include Audi and Racing Bulls
+    "2.0.0": (store) => {
+      store.set("team_icons", defaults.team_icons);
+    },
+    // Add insights widget
+    "2.1.0": (store) => {
+      store.set("internal_settings.windows", defaults.internal_settings.windows);
     },
   },
 
@@ -565,7 +610,13 @@ ipcMain.handle("restoreLayout", async (event, layoutId, liveSessionInfo, content
 
   const layout = layoutConfig[layoutId];
 
-  for (const window of layout.uf1Windows) {
+  if (!layout) {
+    console.error("Layout not found:", layoutId);
+    return;
+  }
+
+  for (const window of layout.uf1Windows || []) {
+    try {
     if (window.path.includes("color")) {
       const backgroundColor = window.path.split(";")[1];
 
@@ -611,6 +662,10 @@ ipcMain.handle("restoreLayout", async (event, layoutId, liveSessionInfo, content
       await newWindow.loadFile(__dirname + window.path);
 
       newWindow.setSize(window.bounds.width, window.bounds.height);
+    }
+
+    } catch (err) {
+      console.error("Failed to restore UF1 window:", window.path, err);
     }
 
     await sleep(1000);
@@ -728,4 +783,27 @@ ipcMain.handle("reset_store", async (event, type) => {
   store.delete(type);
   store.set(type, typeDefaults);
   return store.store;
+});
+
+// Open external URL or protocol link — works on all platforms including Linux
+ipcMain.handle("open_external", async (event, url) => {
+  if (process.platform === "linux") {
+    // xdg-open may block waiting for the launched app — spawn detached and don't wait
+    const child = spawn("xdg-open", [url], { detached: true, stdio: "ignore" });
+    child.unref();
+    return { success: true };
+  } else if (process.platform === "darwin") {
+    const child = spawn("open", [url], { detached: true, stdio: "ignore" });
+    child.unref();
+    return { success: true };
+  } else {
+    // Windows — shell.openExternal works fine
+    try {
+      await shell.openExternal(url);
+      return { success: true };
+    } catch (err) {
+      console.error("Failed to open external link:", err);
+      return { success: false, error: err.message };
+    }
+  }
 });

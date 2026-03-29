@@ -1,13 +1,4 @@
-* {
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-}
-
-#compass {
-    width: calc(100vw);
-}
-
-.drag {
-    -webkit-app-region: drag;
-}
+/* ── Compass – FOM flat ── */
+* { margin: 0; padding: 0; overflow: hidden; }
+#compass { width: 100vw; filter: brightness(0.9) contrast(1.1); }
+.drag { -webkit-app-region: drag; }

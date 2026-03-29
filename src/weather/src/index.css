@@ -16,9 +16,9 @@ body {
     display: grid;
     grid-template-columns: 1fr 10fr 5fr;
     grid-template-rows: 100vh;
-    background-color: #0a0a0faf;
+    background: var(--f1-panel, #15151A);
     padding: 0 10px;
-    border-radius: 40px;
+    border-radius: 2px;
 }
 
 .graphs {
@@ -42,8 +42,8 @@ body {
 .buttons button {
     width: 50px;
     padding: 8px 8px;
-    border-radius: 10px;
-    background-color: transparent;
+    border-radius: 2px;
+    background: var(--f1-surface, #222229);
     transition: all 0.3s ease;
     outline: none;
 }
@@ -115,7 +115,7 @@ body {
 
 .rain {
     padding: 2vh;
-    border-radius: 2vh;
+    border-radius: 2px;
     place-self: start;
 }
 

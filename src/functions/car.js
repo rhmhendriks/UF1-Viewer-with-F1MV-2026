@@ -1,3 +1,16 @@
+/**
+ * CarData channel mapping for 2026:
+ *   0 = RPM
+ *   2 = Speed (km/h)
+ *   3 = Gear (0 = neutral)
+ *   4 = Throttle (0-100)
+ *   5 = Brake (0-100)
+ *
+ * Channel 1 (ERS) and channel 6 (DRS) are no longer broadcast in 2026.
+ * DRS has been replaced by Active Aero which is handled on-car and is not
+ * separately surfaced as a telemetry channel in the F1 live timing feed.
+ */
+
 function getCarData(driverNumber, carData) {
     try {
         carData[0].Cars[driverNumber].Channels;
@@ -27,11 +40,10 @@ function weirdCarBehaviour(racingNumber, timingData, carData, sessionType, sessi
 
     const driverTimingData = timingData[racingNumber];
 
-    const rpm = driverCarData[0];
-
-    const speed = driverCarData[2];
-
-    const gear = driverCarData[3];
+    // Access channels by key — channels 0/2/3 are present in 2026 broadcast telemetry
+    const rpm   = driverCarData[0];  // RPM
+    const speed  = driverCarData[2];  // Speed km/h
+    const gear   = driverCarData[3];  // Gear (0=neutral, 1-8=drive)
 
     const speedLimit = getSpeedThreshold(sessionType, sessionStatus, trackStatus);
 

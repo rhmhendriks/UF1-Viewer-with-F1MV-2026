@@ -2,7 +2,8 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <title>Ultimate Formula 1 Viewer</title>
+        <title>UF1 Viewer – F1 2026 (Ubuntu)</title>
+        <link rel="stylesheet" href="../styles/f1-design-system.css" />
         <link rel="stylesheet" href="style.css" />
         <link rel="stylesheet" href="../fonts/fonts.css" />
         <link rel="stylesheet" href="connection_section.css" />
@@ -17,7 +18,7 @@
     <body>
         <div id="sections">
             <section id="connect" class="shown">
-                <h1>Ultimate Formula 1 Viewer</h1>
+                <h1>UF1 Viewer <span style="font-size:0.6em;opacity:0.7">2026 · Ubuntu</span></h1>
                 <div class="container">
                     <span class="wrapper">
                         <div class="new-window-section">
@@ -52,6 +53,10 @@
             </section>
             <section id="layout" class="layouts">
                 <h1>Saved Layouts</h1>
+                <!-- MV live-restore hint — shown by JS when multiViewerConnected -->
+                <div id="mv-live-badge" style="display:none;margin:8px 0 4px;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#00D65C;opacity:0.85;">
+                    ● MultiViewer connected — restore also moves MV players
+                </div>
                 <div id="layouts-container"></div>
                 <button class="new layout gray" onclick="newLayout()">CREATE NEW LAYOUT</button>
                 <input id="content-id-field" type="text" value="" placeholder="LOAD CUSTOM CONTENT ID" />
@@ -418,10 +423,10 @@
                         ><img width="12" height="12" src="../icons/open-external.png" alt="" />
                     </p>
                     <br />
-                    <h3>Ultimate Formula 1 Viewer</h3>
+                    <h3>UF1 Viewer 2026 – Ubuntu Edition</h3>
                     <p>
-                        <a href="https://github.com/MRAJEKO" target="_blank">MRAJEKO</a
-                        ><img width="12" height="12" src="../icons/open-external.png" alt="" />
+                        <a href="https://github.com/MRAJEKO" target="_blank">MRAJEKO</a>
+                        <img width="12" height="12" src="../icons/open-external.png" alt="" />
                     </p>
                     <br />
                     <h3>Main Window Design</h3>
@@ -474,7 +479,7 @@
                 </section>
             </section>
             <section id="windows" class="windows">
-                <h1>Ultimate Formula 1 Viewer</h1>
+                <h1>UF1 Viewer 2026</h1>
                 <button class="window default" onclick="launchMVF1()">MultiViewer</button>
                 <button class="livetiming window default disabled" onclick="livetiming()">Live Timing</button>
                 <button class="window default" onclick="flagDisplay()">Flag Display</button>
@@ -489,6 +494,7 @@
                 <button class="window default" onclick="currentLaps()">Current Laps</button>
                 <button class="window default" onclick="battlemode()">Battle Mode</button>
                 <button class="window default" onclick="weather()">Weather Information</button>
+                <button class="window default" onclick="insights()">Session Insights</button>
                 <div class="new-window-section">
                     <div class="line"></div>
                     <p>BETA</p>

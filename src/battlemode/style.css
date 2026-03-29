@@ -1,308 +1,198 @@
-* {
-    margin: 0;
-    padding: 0;
-    color: white;
-}
+/* ── Battle Mode – FOM flat style ── */
 
-body {
-    height: 100vh;
-    width: 100vw;
-    overflow: hidden;
-}
+* { margin: 0; padding: 0; color: #fff; box-sizing: border-box; }
+body { height: 100vh; width: 100vw; overflow: hidden; background: transparent; }
+.drag { -webkit-app-region: drag; }
+.transparent { background-color: transparent !important; }
 
-.drag {
-    -webkit-app-region: drag;
-}
-
-.transparent {
-    background-color: transparent !important;
-}
-
-#container {
-    height: 100vh;
-    width: 100vw;
-}
+#container { height: 100vh; width: 100vw; background: var(--f1-panel, #15151A); border-radius: 2px; }
 
 #wrapper {
-    background-color: #0a0a0faf;
-    border-radius: 25px;
-    padding: 4vh 8vh;
-    height: calc(55% - 8vh);
-    width: calc(100% - 16vh);
-    display: flex;
-    justify-content: space-between;
-    position: absolute;
-    bottom: 20vh;
+  background: var(--f1-panel, #15151A);
+  border-radius: 2px;
+  padding: 3vh 6vh;
+  height: calc(55% - 6vh);
+  width: calc(100% - 12vh);
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  bottom: 20vh;
 }
 
-.driver {
-    height: 100%;
-    display: flex;
-    gap: 7vh;
-}
+/* ── Driver card ── */
+.driver { height: 100%; display: flex; gap: 5vh; }
 
 .driver-info {
-    position: relative;
-    top: calc(-40% - 3.5vh);
-    height: calc(140% + 3.5vh);
-    width: 65vh;
+  position: relative;
+  top: calc(-40% - 3vh);
+  height: calc(140% + 3vh);
+  width: 60vh;
 }
 
 .driver-headshot {
-    height: 70%;
-    position: relative;
-    border-bottom: 2px solid white;
-    display: flex;
-    justify-content: center;
+  height: 70%;
+  position: relative;
+  border-bottom: 3px solid var(--f1-divider, rgba(255,255,255,0.07));
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
 }
-
-.driver-headshot img {
-    position: absolute;
-    bottom: 0;
-    height: 110%;
-}
+.driver-headshot img { position: absolute; bottom: 0; height: 110%; }
 
 .driver-name {
-    padding: 2vh 5vh;
+  padding: 1.5vh 4vh;
+  background: var(--f1-panel-alt, #1B1B22);
+  border-left: 3px solid var(--team-color, #E10600);
 }
 
 .driver-name .first-name {
-    padding-left: 1vh;
-    font-family: "OF1Regular";
-    font-size: 5vh;
-    transform: skew(-10deg);
-    text-shadow: 0.5vh 0.5vh 0.5vh black;
+  padding-left: 0.5vh;
+  font-family: "OF1Regular";
+  font-size: 4.5vh;
+  transform: skew(-10deg);
+  color: var(--f1-text-2, rgba(255,255,255,0.62));
 }
-
 .driver-name .last-name {
-    font-family: "OF1Bold";
-    font-size: 7vh;
-    transform: skew(-10deg);
-    text-shadow: 0.5vh 0.5vh 0.5vh black;
+  font-family: "OF1Bold";
+  font-size: 6.5vh;
+  transform: skew(-10deg);
+  letter-spacing: 0.02em;
 }
 
+/* ── Position / tires / pit ── */
 .pitlane {
-    padding: 1vh 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
+  padding: 1vh 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
 }
-
 .position p {
-    font-family: "OF1Bold";
-    font-size: 6vh;
-    transform: skew(-10deg);
+  font-family: "OF1Bold";
+  font-size: 6vh;
+  transform: skew(-10deg);
+  font-variant-numeric: tabular-nums;
 }
 
-.tires {
-    width: 10vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.tires .current-tire img {
-    width: 100%;
-}
-
+.tires { width: 10vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.tires .current-tire img { width: 100%; }
 .tire-age {
-    font-family: "SFBold";
-    font-size: 7vh;
+  font-family: "SFBold";
+  font-size: 7vh;
+  font-variant-numeric: tabular-nums;
+  color: var(--f1-text-2, rgba(255,255,255,0.62));
 }
 
-.pit {
-    width: 100%;
-    display: grid;
-    place-items: center;
-}
-
+.pit { width: 100%; display: grid; place-items: center; }
 .pit p {
-    font-family: "OF1Bold";
-    border: 2px solid red;
-    color: red;
-    width: 10vh;
-    padding: 1vh;
-    border-radius: 3vh;
-    display: grid;
-    place-items: center;
-    font-size: 6vh;
+  font-family: "OF1Bold";
+  border: 2px solid var(--f1-red, #E10600);
+  color: var(--f1-red, #E10600);
+  width: 10vh; padding: 0.8vh; border-radius: 2px;
+  display: grid; place-items: center;
+  font-size: 5.5vh; letter-spacing: 0.04em;
 }
 
+/* ── Timing ── */
 .times {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    width: 40vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 38vh;
 }
-
 .time-name {
-    font-family: "SFRegular";
-    font-size: 7vh;
+  font-family: "SFRegular";
+  font-size: 6vh;
+  color: var(--f1-text-3, rgba(255,255,255,0.35));
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
-
 .time-time {
-    font-family: "SFBold";
-    font-size: 9vh;
+  font-family: "SFBold";
+  font-size: 8.5vh;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
 }
 
+/* ── Telemetry ── */
 .telemetry {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
-    width: 50vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  width: 48vh;
 }
-
 .drs p {
-    padding: 1vh 5vh;
-    width: fit-content;
-    font-size: 8vh;
-    border-radius: 2vh;
-    font-family: "OF1Bold";
-    text-align: center;
-    border: 2px solid green;
-    color: green;
+  padding: 0.8vh 4vh;
+  font-size: 7vh;
+  border-radius: 2px;
+  font-family: "OF1Bold";
+  text-align: center;
+  border: 2px solid var(--f1-green, #00D245);
+  color: var(--f1-green, #00D245);
+  letter-spacing: 0.06em;
 }
+.off { opacity: 0.2; }
 
-.off {
-    opacity: 0.3;
-}
-
-.speed {
-    display: flex;
-    gap: 2vh;
-}
-
-.speed-number {
-    font-family: "OF1Bold";
-    font-size: 8vh;
-}
-
+.speed { display: flex; gap: 2vh; align-items: baseline; }
+.speed-number { font-family: "OF1Bold"; font-size: 8vh; font-variant-numeric: tabular-nums; }
 .metric {
-    font-family: "OF1Regular";
-    font-size: 5vh;
-    top: 3vh;
-    position: relative;
+  font-family: "OF1Regular"; font-size: 5vh; top: 3vh; position: relative;
+  color: var(--f1-text-3, rgba(255,255,255,0.35));
 }
 
-.pedals {
-    height: 9vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 80%;
-}
-
+.pedals { height: 8vh; display: flex; flex-direction: column; justify-content: space-between; width: 80%; }
 .pedal {
-    border: 0.5vh solid black;
-    height: 2vh;
-    border-radius: 4vh;
-    overflow: hidden;
+  height: 2vh; border-radius: 1px; overflow: hidden;
+  background: var(--f1-surface, #222229);
 }
+.pedal div { width: 0; height: 100%; transition: width 0.15s ease; border-radius: 1px; }
 
-.pedal div {
-    width: 0;
-    height: 100%;
-    transition: all 0.2s ease;
-}
-
-.gap {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 10vh;
-    padding: 0 10vh;
-}
-
-.gap .line {
-    width: 100%;
-    border-bottom: 1vh dashed white;
-}
-
-.gap .gap-time {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
+/* ── Gap ── */
+.gap { width: 100%; display: flex; align-items: center; gap: 8vh; padding: 0 8vh; }
+.gap .line { width: 100%; border-bottom: 1vh dashed rgba(255,255,255,0.15); }
+.gap .gap-time { display: flex; flex-direction: column; align-items: center; }
 .gap .gap-time-time {
-    font-family: "OF1Bold";
-    white-space: nowrap;
-    font-size: 10vh;
-    transform: skew(-10deg);
+  font-family: "OF1Bold";
+  white-space: nowrap;
+  font-size: 9vh;
+  transform: skew(-10deg);
+  font-variant-numeric: tabular-nums;
 }
+.gap .gap-time-format { font-family: "OF1Regular"; font-size: 5vh; color: var(--f1-text-3, rgba(255,255,255,0.35)); }
 
-.gap .gap-time-format {
-    font-family: "OF1Regular";
-    font-size: 6vh;
-}
-
-.shown {
-    opacity: 1 !important;
-}
-
+/* ── Controls ── */
+.shown { opacity: 1 !important; }
 #buttons {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100vw;
-    background-color: #0a0a0faf;
-    height: 18vh;
-    border-radius: 5vh;
-    opacity: 0;
-    transition: all 0.5s ease;
-    display: flex;
-    justify-content: space-evenly;
-    gap: 2vh;
-    align-items: center;
+  position: absolute; bottom: 0; left: 0;
+  width: 100vw;
+  background: var(--f1-panel, #15151A);
+  height: 18vh;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 2vh;
+  border-top: 1px solid var(--f1-divider, rgba(255,255,255,0.07));
 }
-
 .button {
-    width: 24vh;
-    height: 14vh;
-    background-color: transparent;
-    border-radius: 5vh;
-    display: grid;
-    place-items: center;
-    border: 0.5vh solid;
-    opacity: 0.6;
-    outline: none;
-    transition: all 0.5s ease;
-    font-family: "SFBold";
-    font-size: 7vh;
+  width: 22vh; height: 13vh;
+  background: var(--f1-surface, #222229);
+  border-radius: 2px;
+  display: grid; place-items: center;
+  border: 1px solid var(--f1-border, rgba(255,255,255,0.08));
+  opacity: 0.6; outline: none;
+  transition: opacity 0.2s, background 0.2s;
+  font-family: "SFBold"; font-size: 6vh; cursor: pointer;
 }
+.button:hover { opacity: 1; background: var(--f1-panel-alt, #1B1B22); }
 
-.button:hover {
-    opacity: 1;
-}
-
-.green {
-    background-color: green;
-}
-
-.fastest-time {
-    color: #9c27b0;
-}
-
-.personal-best {
-    color: #4caf50;
-}
-
-.red-text {
-    color: red;
-}
-
-.slow {
-    color: #fdd835;
-}
-
-.red {
-    background-color: red;
-}
-
-.gray {
-    color: rgba(255, 255, 255, 0.233);
-}
+/* ── Colors ── */
+.green { background-color: var(--f1-green, #00D245); }
+.fastest-time { color: var(--f1-purple, #9B59B6); }
+.personal-best { color: var(--f1-green, #00D245); }
+.red-text { color: var(--f1-red, #E10600); }
+.slow { color: var(--f1-yellow, #FFF200); }
+.red { background-color: var(--f1-red, #E10600); }
+.gray { color: var(--f1-text-3, rgba(255,255,255,0.35)); }

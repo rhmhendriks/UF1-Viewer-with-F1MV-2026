@@ -4,7 +4,8 @@ const { ipcRenderer } = require("electron");
 const debug = false;
 
 const f1mvApi = require("npm_f1mv_api");
-const { get } = require("request");
+// Direct GraphQL client — tries port 10101 first for Ubuntu reliability
+const f1mvClient = require("../api/f1mv-client");
 
 async function getConfigurations(host, port, file) {
     config = {
@@ -20,14 +21,8 @@ async function getConfigurations(host, port, file) {
 
 async function launchMVF1() {
     const multiviewerLink = (await ipcRenderer.invoke("get_store")).internal_settings.multiviewer.app.link;
-
-    if (navigator.appVersion.includes("Win") || navigator.appVersion.includes("Mac")) {
-        location = multiviewerLink;
-    } else if (navigator.appVersion.includes("X11") || navigator.appVersion.includes("Linux")) {
-        alert("Opening MultiViewer for Linux is not supported yet.");
-    } else {
-        alert("Cannot run MultiViewer because OS is unknown.");
-    }
+    // Use ipcMain shell.openExternal for all platforms including Linux
+    await ipcRenderer.invoke("open_external", multiviewerLink);
 }
 
 async function ignore() {
@@ -41,20 +36,16 @@ async function livetiming() {
 
     if (liveSession) {
         if (multiViewerConnected) {
-            location = multiviewerLinks.livetiming.link;
+            await ipcRenderer.invoke("open_external", multiviewerLinks.livetiming.link);
         } else {
-            if (navigator.appVersion.includes("Win") || navigator.appVersion.includes("Mac")) {
-                location = multiviewerLinks.app.link;
-
-                const interval = setInterval(() => {
-                    if (multiViewerConnected) {
-                        location = multiviewerLinks.livetiming.link;
-                        clearInterval(interval);
-                    }
-                }, 500);
-            } else {
-                location = multiviewerLinks.livetiming.link;
-            }
+            // Open app first then redirect to live timing once connected (all platforms)
+            await ipcRenderer.invoke("open_external", multiviewerLinks.app.link);
+            const interval = setInterval(async () => {
+                if (multiViewerConnected) {
+                    await ipcRenderer.invoke("open_external", multiviewerLinks.livetiming.link);
+                    clearInterval(interval);
+                }
+            }, 500);
         }
     }
 }
@@ -238,6 +229,12 @@ async function autoSwitch() {
     const internalSettings = (await ipcRenderer.invoke("get_store")).internal_settings;
 
     await ipcRenderer.invoke("window", ...Object.values(internalSettings.windows.autoswitcher));
+}
+
+async function insights() {
+    const internalSettings = (await ipcRenderer.invoke("get_store")).internal_settings;
+
+    await ipcRenderer.invoke("window", ...Object.values(internalSettings.windows.insights));
 }
 
 function openLayouts() {
@@ -454,9 +451,19 @@ async function isConnected(ignore) {
 
         const host = configFile.network.host;
         try {
-            const port = (await f1mvApi.discoverF1MVInstances(host)).port;
+            // On Ubuntu, try the direct GraphQL port (10101) first before auto-discovery
+            let port = await f1mvClient.discoverPort(host);
+            if (!port) {
+                port = (await f1mvApi.discoverF1MVInstances(host))?.port;
+            }
+
+            if (!port) throw new Error("No MultiViewer instance found");
 
             multiViewerConnected = true;
+
+            // Show the MV-live hint in the layouts panel
+            const mvBadge = document.getElementById("mv-live-badge");
+            if (mvBadge) mvBadge.style.display = "block";
 
             document.getElementById("mv-connection").innerHTML = "MULTIVIEWER: <span>CONNECTED</span>";
             document.getElementById("mv-connection").className = "link connected";
@@ -485,7 +492,7 @@ async function isConnected(ignore) {
                 console.log("No live timing session found");
             }
         } catch (error) {
-            console.log("No MultiViewer instance found");
+            console.log("No MultiViewer instance found:", error.message);
         }
     }, 500);
 }

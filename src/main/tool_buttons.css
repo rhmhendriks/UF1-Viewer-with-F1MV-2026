@@ -1,73 +1,56 @@
-.tools-wrapper {
-    display: flex;
-    width: 90%;
-    justify-content: space-between;
-    margin: 0 auto;
-    align-items: center;
-}
+/* ── Bottom Toolbar – FOM flat ── */
 
 .tools {
-    height: 79px;
-    display: grid;
-    place-items: center;
-    background-color: #ffffff05;
-    /* background: linear-gradient(
-        180deg,
-        rgba(26, 26, 26, 1) 0%,
-        rgba(26, 26, 26, 0.6) 20%,
-        rgba(26, 26, 26, 0.3) 40%,
-        rgba(26, 26, 26, 0) 60%,
-        rgba(26, 26, 26, 0) 80%,
-        rgba(26, 26, 26, 0) 100%
-    ); */
-    border-top: 1px solid #9f9f9f;
-    z-index: 5;
+    height: 64px; display: grid; place-items: center;
+    background: var(--f1-panel, #15151A);
+    border-top: 1px solid var(--f1-divider, rgba(255,255,255,0.07));
+    z-index: 5; position: relative;
+}
+
+/* Solid red accent at very bottom */
+.tools::after {
+    content: ''; position: absolute;
+    bottom: 0; left: 0; right: 0; height: 2px;
+    background: var(--f1-red, #E10600);
+    pointer-events: none;
+}
+
+.tools-wrapper {
+    display: flex; width: 92%; justify-content: space-between;
+    margin: 0 auto; align-items: center;
 }
 
 .connection-status p {
-    color: #9f9f9f;
+    font-size: 10px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--f1-gray, #7E7E8A);
 }
 
 .dynamic-button {
-    position: relative;
-    width: fit-content;
-    height: fit-content;
-    aspect-ratio: 1/1;
+    position: relative; width: fit-content; height: fit-content; aspect-ratio: 1/1;
 }
 
-#layout-button {
-    position: absolute;
-    top: 0;
-    left: 0;
-}
+#layout-button { position: absolute; top: 0; left: 0; }
 
 #reset-defaults {
-    position: absolute;
-    border-radius: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: all 0.4s ease-in-out;
+    position: absolute; border-radius: 50%;
+    display: flex; justify-content: center; align-items: center;
+    transition: all 0.3s ease;
 }
 
-#reset-icon,
-#settings-icon,
-#layout-icon,
-.dynamic-button {
-    transition: all 0.5s ease;
-    width: 30px;
+#reset-icon, #settings-icon, #layout-icon, .dynamic-button {
+    transition: all 0.3s ease; width: 28px; opacity: 0.60;
+    filter: brightness(0) invert(1);
 }
-
-.buttons {
-    display: grid;
-    place-items: center;
-    background: transparent;
-    border: none;
-    z-index: 4;
+#reset-icon:hover, #settings-icon:hover, #layout-icon:hover {
     opacity: 1;
 }
 
-.hidden {
-    z-index: 1;
-    opacity: 0;
+.buttons {
+    display: grid; place-items: center;
+    background: transparent; border: none; z-index: 4;
+    opacity: 1; cursor: pointer; padding: 6px;
+    border-radius: 2px; transition: background 0.2s;
 }
+.buttons:hover { background: rgba(255,255,255,0.05); }
+
+.hidden { z-index: 1; opacity: 0; pointer-events: none; }

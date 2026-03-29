@@ -1,0 +1,80 @@
+/*
+ * UF1 – FOM Broadcast Design System 2026
+ * Flat, lean, material-influenced — matches real F1TV on-screen graphics.
+ * Solid dark fills, tight spacing, sharp geometry, no blur/glass.
+ */
+
+:root {
+  --f1-red:        #E10600;
+  --f1-white:      #FFFFFF;
+  --f1-black:      #0D0D0F;
+  --f1-panel:      #15151A;
+  --f1-panel-alt:  #1B1B22;
+  --f1-surface:    #222229;
+  --f1-divider:    rgba(255,255,255,0.07);
+  --f1-border:     rgba(255,255,255,0.08);
+
+  --f1-text:       #FFFFFF;
+  --f1-text-2:     rgba(255,255,255,0.62);
+  --f1-text-3:     rgba(255,255,255,0.35);
+
+  --f1-green:      #00D245;
+  --f1-yellow:     #FFF200;
+  --f1-orange:     #FF8000;
+  --f1-purple:     #9B59B6;
+  --f1-blue:       #00A3FF;
+  --f1-gray:       #7E7E8A;
+
+  --f1-font:       "SFBold", system-ui, sans-serif;
+  --f1-font-reg:   "SFRegular", system-ui, sans-serif;
+  --f1-font-med:   "SFMedium", system-ui, sans-serif;
+
+  --f1-radius:     3px;
+  --f1-radius-md:  6px;
+  --f1-radius-lg:  10px;
+
+  --f1-ease:       cubic-bezier(0.22, 0.61, 0.36, 1);
+  --f1-speed:      0.3s;
+}
+
+.f1-mono {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+.f1-label {
+  font-family: var(--f1-font);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--f1-text-2);
+}
+
+.f1-divider {
+  height: 1px;
+  background: var(--f1-divider);
+  width: 100%;
+}
+
+.f1-icon {
+  filter: brightness(0) invert(1);
+  opacity: 0.8;
+}
+
+.f1-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+.f1-dot--on  { background: var(--f1-green); }
+.f1-dot--off { background: var(--f1-red); }
+
+@keyframes f1-fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes f1-pulse {
+  0%,100% { opacity: 1; }
+  50%     { opacity: 0.55; }
+}

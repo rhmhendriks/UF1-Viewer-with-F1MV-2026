@@ -1,96 +1,62 @@
-/* Base styling */
-* {
-    margin: 0;
-    padding: 0;
-    color: white;
-}
+/* ── Auto Switch – FOM flat ── */
 
-body {
-    height: 100vh;
-}
-
-.drag {
-    -webkit-app-region: drag;
-}
+* { margin: 0; padding: 0; color: #fff; box-sizing: border-box; }
+body { height: 100vh; background: transparent; }
+.drag { -webkit-app-region: drag; }
 
 #container {
-    background-color: #0a0a0faf;
-    border-radius: 20px;
-    height: 100vh;
-    overflow: hidden;
+    background: var(--f1-panel, #15151A);
+    border-radius: 2px; height: 100vh; overflow: hidden;
 }
 
 .wrapper {
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-evenly;
-    height: calc(90vh);
-    overflow: hidden;
+    padding: 10px; display: flex; flex-direction: column;
+    align-items: center; justify-content: space-evenly;
+    height: 90vh; overflow: hidden;
 }
 
-.transparent {
-    background-color: transparent;
-}
-
-button {
-    -webkit-app-region: no-drag;
-}
+.transparent { background-color: transparent; }
+button { -webkit-app-region: no-drag; }
 
 h1 {
     text-align: center;
-    font-family: "SFBold", Arial, Helvetica, sans-serif;
+    font-family: var(--f1-font, "SFBold", Arial, sans-serif);
+    letter-spacing: 0.06em; text-transform: uppercase;
 }
 
 h2 {
-    font-family: "SFRegular", Arial, Helvetica, sans-serif;
+    font-family: var(--f1-font-reg, "SFRegular", Arial, sans-serif);
+    color: var(--f1-text-2, rgba(255,255,255,0.62));
 }
 
 .status {
-    border: 2px solid rgb(0, 175, 0);
-    color: rgb(0, 175, 0);
-    background-color: transparent;
-    width: fit-content;
-    padding: 5px;
-    border-radius: 10px;
+    border: 1px solid var(--f1-green, #00D245);
+    color: var(--f1-green, #00D245);
+    background: rgba(0,210,69,0.08);
+    width: fit-content; padding: 5px 12px; border-radius: 2px;
+    font-family: var(--f1-font, "SFBold"); font-size: 13px; letter-spacing: 0.06em;
 }
 
 p {
-    font-family: "SFRegular", Arial, Helvetica, sans-serif;
-    width: 50px !important;
-    font-size: 30px;
-    text-align: center;
+    font-family: var(--f1-font-reg, "SFRegular", Arial, sans-serif);
+    width: 50px !important; font-size: 30px; text-align: center;
+    font-variant-numeric: tabular-nums;
 }
 
 .disclamer {
-    font-size: 12px;
-    width: 90% !important;
-    position: absolute;
-    bottom: 10px;
-    color: gray;
+    font-size: 12px; width: 90% !important; position: absolute; bottom: 10px;
+    color: var(--f1-text-3, rgba(255,255,255,0.35));
 }
 
 button {
-    background-color: transparent;
+    background: var(--f1-surface, #222229);
     padding: 10px 20px;
-    font-family: "SFRegular", Arial, Helvetica, sans-serif;
-    border-radius: 10px;
-    outline: none;
-    width: 130px;
-    margin: 10px;
+    font-family: var(--f1-font-reg, "SFRegular", Arial, sans-serif);
+    border-radius: 2px; outline: none; width: 130px; margin: 10px;
+    cursor: pointer; transition: background 0.25s ease; color: #fff;
 }
+button:hover { background: rgba(255,255,255,0.10); }
 
-.hide {
-    border: 2px solid red;
-    color: red;
-}
-
-.small {
-    border: 2px solid rgb(0, 102, 255);
-    color: rgb(0, 102, 255);
-}
-
-.hidden {
-    display: none;
-}
+.hide { border: 1px solid var(--f1-red, #E10600); color: var(--f1-red, #E10600); }
+.small { border: 1px solid var(--f1-blue, #00A3FF); color: var(--f1-blue, #00A3FF); }
+.hidden { display: none; }

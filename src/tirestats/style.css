@@ -1,163 +1,50 @@
-* {
-    margin: 0;
-    padding: 0;
-    font-family: "SFBold";
-    color: white;
-    overflow: hidden;
-}
+/* ── Tire Stats – FOM flat ── */
 
-body {
-    height: 100vh;
-    width: 100vw;
-}
-
-.drag {
-    -webkit-app-region: drag;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; color: #fff; font-family: "SFBold", system-ui, sans-serif; }
+body { height: 100vh; width: 100vw; background: transparent; overflow: hidden; }
+.drag { -webkit-app-region: drag; }
 
 .container {
-    background-color: #0a0a0faf;
-    height: 100vh;
-    width: 100vw;
-    display: flex;
-    border-radius: 6vw;
+  background: var(--f1-panel, #15151A);
+  height: 100vh; width: 100vw;
+  display: flex; border-radius: 2px;
 }
 
-.wrapper {
-    padding: 4vw;
-    text-align: center;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-}
+.wrapper { padding: 3vw; text-align: center; width: 100%; display: flex; flex-direction: column; }
+.header h1 { font-size: 3.5vw; letter-spacing: 0.08em; text-transform: uppercase; color: var(--f1-text-2, rgba(255,255,255,0.62)); }
 
-.header h1 {
-    font-size: 4vw;
-}
-
-.info {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    column-gap: 4vw;
-    height: 100%;
-    margin-top: 3vw;
-}
-
-.tire {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.tire-image img {
-    width: 70%;
-}
-
-.tire-image p {
-    font-size: 3.5vw;
-    font-family: "OF1Bold";
-    transform: skew(-10deg);
-    text-shadow: 0.25vw 0.25vw 0.25vw black;
-    margin-top: 1.5vw;
-}
-
-.title {
-    font-size: 3vw;
-    font-family: "OF1Bold";
-    color: red;
-    transform: skew(-10deg);
-    text-shadow: 0.25vw 0.25vw 0.25vw black;
-}
+.info { display: grid; grid-template-columns: 1fr 1fr 1fr; column-gap: 3vw; height: 100%; margin-top: 2vw; }
+.tire { height: 100%; display: flex; flex-direction: column; justify-content: space-between; }
+.tire-image img { width: 65%; }
+.tire-image p { font-size: 3.5vw; font-family: "OF1Bold"; transform: skew(-10deg); margin-top: 1vw; }
+.title { font-size: 2.8vw; font-family: "OF1Bold"; color: var(--f1-red, #E10600); transform: skew(-10deg); letter-spacing: 0.04em; }
 
 .row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 0.8vw 0;
-    background-color: rgba(255, 255, 255, 0.048);
-    border-radius: 1vw;
-    padding: 0.5vw 1vw;
+  display: flex; justify-content: space-between; align-items: center;
+  margin: 0.6vw 0; background: var(--f1-panel-alt, #1B1B22);
+  border-radius: 2px; padding: 0.5vw 1vw;
+  border-left: 3px solid transparent;
+  transition: background 0.25s ease, border-color 0.25s ease;
 }
+.row p { opacity: 0.85; }
+.split { width: 1px; margin: auto; background: var(--f1-divider, rgba(255,255,255,0.07)); height: 80%; }
+.driver { display: flex; align-items: center; gap: 1vw; }
+.driver p { font-size: 2.2vw; font-family: "OF1Bold"; }
+.time p { font-size: 2vw; font-variant-numeric: tabular-nums; }
+.delta-time { padding: 1vw; }
+.delta-time p { font-size: 3vw; padding: 0.5vw 2vw; border-radius: 2px; display: inline; font-variant-numeric: tabular-nums; }
+.stats .row p { font-size: 2.5vw; }
 
-.row p {
-    opacity: 0.8;
-}
+/* Compound colours */
+.unknown { background: rgba(0,0,0,0.25); }
+.soft { color: #E10600; }
+.medium { color: #FFF200; }
+.hard { color: #fff; }
+.intermediate { color: #00D245; }
+.wet { color: #00A3FF; }
+.test { color: rgba(200,200,200,0.7); }
 
-.split {
-    width: 0.2vw;
-    margin: auto;
-    background-color: white;
-    height: 80%;
-    align-items: center;
-}
-
-.driver {
-    display: flex;
-    align-items: center;
-    gap: 1vw;
-}
-
-.driver p {
-    font-size: 2.2vw;
-    font-family: "OF1Bold";
-}
-
-.time p {
-    font-size: 2vw;
-}
-
-.delta-time {
-    padding: 1vw;
-}
-
-.delta-time p {
-    font-size: 3vw;
-    padding: 0.5vw 2vw;
-    border-radius: 3vw;
-    display: inline;
-}
-
-.stats .row p {
-    font-size: 2.5vw;
-}
-
-.unknown {
-    background-color: rgba(0, 0, 0, 0.3);
-}
-
-.soft {
-    color: red;
-}
-
-.medium {
-    color: yellow;
-}
-
-.hard {
-    color: white;
-}
-
-.intermediate {
-    color: green;
-}
-
-.wet {
-    color: blue;
-}
-
-.test {
-    color: rgb(192, 192, 192);
-}
-
-.fastest {
-    background-color: rgba(128, 0, 128, 0.3);
-}
-
-.good {
-    background-color: rgba(0, 128, 0, 0.3);
-}
-
-.bad {
-    background-color: rgba(255, 102, 0, 0.3);
-}
+/* Performance */
+.fastest { background: rgba(155,89,182,0.18); border-left-color: #9B59B6; }
+.good { background: rgba(0,210,69,0.14); border-left-color: #00D245; }
+.bad { background: rgba(255,128,0,0.14); border-left-color: #FF8000; }

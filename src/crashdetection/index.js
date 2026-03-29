@@ -96,11 +96,15 @@ function weirdCarBehaviour(driverCarData, racingNumber) {
 function overwriteCrashedStatus(racingNumber) {
     const driverTimingData = timingData[racingNumber];
 
-    if (driverTimingData.InPit === true) return true;
-    if (driverTimingData.Retired === true) return true;
-    if (driverTimingData.Stopped === true) return true;
+    if (!driverTimingData) return false;
 
-    const lastSectorSegments = driverTimingData.Sectors.slice(-1)[0].Segments;
+    if (driverTimingData.InPit === true) return true;
+
+    const sectors = driverTimingData.Sectors;
+    if (!sectors || !Array.isArray(sectors) || sectors.length === 0) return false;
+    const lastSector = sectors[sectors.length - 1];
+    if (!lastSector) return false;
+    const lastSectorSegments = lastSector.Segments;
 
     const sessionInactive =
         sessionStatus === "Inactive" || sessionStatus === "Finished" || sessionStatus === "Finalised";
@@ -181,14 +185,33 @@ async function run() {
 
                 const driverElement = document.getElementById(driverNumber);
 
-                const crashed = driverHasCrashed(driverNumber);
+                let crashed = false;
+                try {
+                    crashed = driverHasCrashed(driverNumber);
+                } catch (err) {
+                    console.warn("driverHasCrashed error for", driverNumber, err.message);
+                }
 
                 if (crashed) {
                     if (driverElement === null) {
                         const newDriverElement = document.createElement("li");
                         newDriverElement.id = driverNumber;
-                        newDriverElement.style.color = "#" + color;
-                        newDriverElement.innerHTML = name;
+                        newDriverElement.style.borderLeftColor = "#" + color;
+
+                        const headshotUrl = driverInfo.HeadshotUrl ||
+                            "https://media.formula1.com/d_driver_fallback_image.png/content/dam/fom-website/drivers/fallback/fallback.png.transform/1col/image.png";
+
+                        const firstName = driverInfo.FirstName || "";
+                        const lastName = driverInfo.LastName ? driverInfo.LastName.toUpperCase() : driverInfo.Tla;
+
+                        newDriverElement.innerHTML = `
+                            <img class="driver-headshot" src="${headshotUrl}" alt="${lastName}" onerror="this.src='https://media.formula1.com/d_driver_fallback_image.png/content/dam/fom-website/drivers/fallback/fallback.png.transform/1col/image.png'" />
+                            <div class="driver-info">
+                                <span class="driver-name">${firstName ? `<span style="font-size:0.75em;opacity:0.70">${firstName} </span>` : ""}${lastName}</span>
+                                <span class="driver-number"># ${driverNumber}</span>
+                            </div>
+                            <span class="crash-icon">⚠</span>
+                        `;
                         HTMLDisplayList.appendChild(newDriverElement);
                         await sleep(10);
                         newDriverElement.className = "show";
@@ -217,8 +240,27 @@ async function run() {
 }
 run();
 
+function playAlarmSound() {
+    try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        for (let i = 0; i < 4; i++) {
+            const osc  = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain); gain.connect(ctx.destination);
+            osc.type = "sawtooth";
+            const t = ctx.currentTime + i * 0.28;
+            osc.frequency.setValueAtTime(440, t);
+            osc.frequency.setValueAtTime(330, t + 0.13);
+            gain.gain.setValueAtTime(0.4, t);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.27);
+            osc.start(t); osc.stop(t + 0.27);
+        }
+    } catch (e) { /* audio unavailable */ }
+}
+
 async function triggerWarning() {
     console.log("trigger warning");
+    playAlarmSound();
     const title = document.querySelector("h1");
     let loop = 0;
     while (loop <= 10) {

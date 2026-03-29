@@ -1,85 +1,62 @@
+/* ── Windows / Buttons Section – FOM flat ── */
+
 .new-window-section {
-    display: flex;
-    width: 60%;
-    justify-content: space-evenly;
-    color: gray !important;
-    font-size: 12px;
-    align-items: center;
-    white-space: nowrap;
+    display: flex; width: 100%; justify-content: flex-start;
+    align-items: center; gap: 10px; padding: 4px 0 10px; white-space: nowrap;
+}
+.new-window-section p {
+    font-size: 10px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--f1-gray, #7E7E8A); flex-shrink: 0;
 }
 
 .line {
-    background-color: gray;
-    height: 2px;
-    width: 100%;
-    margin: 10px;
+    flex: 1; height: 1px;
+    background: var(--f1-divider, rgba(255,255,255,0.07));
+    margin: 0; width: initial;
 }
 
 .windows {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    /* max-height: 100vh; */
-    margin-bottom: 7.5px;
+    display: flex; flex-direction: column;
+    align-items: center; width: 100%; margin-bottom: 0;
 }
 
 .window {
-    background-color: transparent;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 10px;
-    transition: all 0.5s ease;
-    font-size: 17px;
-    width: 60%;
-    min-height: 40px;
-    height: 40px;
-    margin: 7.5px;
-    border: 2px solid transparent;
+    background: var(--f1-panel, #15151A);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 2px;
+    color: var(--f1-white, #fff); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+    width: 100%; height: 42px; min-height: 42px;
+    margin: 5px 0; gap: 10px; transition: all 0.25s ease;
+    position: relative; overflow: hidden;
 }
 
-.link.gray,
-.window.gray {
-    border-color: #9f9f9f;
-    color: white;
+.window::before {
+    content: ''; position: absolute;
+    left: 0; top: 0; bottom: 0; width: 3px;
+    background: currentColor; opacity: 0.7;
+    transform: scaleY(0); transition: transform 0.2s ease; transform-origin: center;
 }
+.window:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.16); transform: none; }
+.window:hover::before { transform: scaleY(1); }
+.window:active { background: rgba(255,255,255,0.08); transform: translateY(1px); }
 
-.link.default,
-.window.default {
-    border-color: rgb(255, 50, 50);
-    color: rgb(255, 50, 50);
-}
-
-.link.beta,
-.window.beta {
-    border-color: #c76cff;
-    color: #c76cff;
-}
-
-.window:hover {
-    transform: translate(3px, 3px);
-}
+.link.gray, .window.gray { border-color: rgba(255,255,255,0.12); color: var(--f1-white, #fff); }
+.link.default, .window.default { border-color: rgba(225,6,0,0.40); color: #FF4060; }
+.link.beta, .window.beta { border-color: rgba(155,89,182,0.40); color: var(--f1-purple, #9B59B6); }
 
 #solid-color-windows {
-    display: flex;
-    justify-content: space-evenly;
+    display: flex; justify-content: space-evenly;
+    gap: 8px; padding: 0 4px; width: 100%; box-sizing: border-box;
 }
-
-#solid-color-windows:hover {
-    transform: none;
-}
+#solid-color-windows:hover { transform: none; }
 
 .solid-color-window {
-    width: 100%;
-    height: 100%;
-    border-radius: 10px;
-    box-shadow: 3px 3px #000000;
-    transition: all 0.5s ease;
-    border: 2px solid #9f9f9f;
-    margin: 7.5px;
+    flex: 1; height: 32px; border-radius: 2px;
+    border: 1px solid rgba(255,255,255,0.10); margin: 0;
+    transition: all 0.2s ease; cursor: pointer;
 }
-
 .solid-color-window:hover {
-    transform: translate(3px, 3px);
-    box-shadow: 0 0 #000000;
+    transform: translateY(-2px); border-color: rgba(255,255,255,0.25);
 }

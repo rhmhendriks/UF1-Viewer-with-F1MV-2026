@@ -1,53 +1,18 @@
-* {
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-}
+/* ── Flag Display – FOM flat ── */
+* { margin: 0; padding: 0; overflow: hidden; }
+body { background: var(--f1-black, #0D0D0F); }
+.move { -webkit-app-region: drag; width: 100vw; height: 100vh; }
 
-body {
-    background-color: #1a1a1a;
-}
-
-.move {
-    -webkit-app-region: drag;
-    width: 100vw;
-    height: 100vh;
-}
-
-#extra,
-#flag,
-#chequered {
-    position: absolute;
-    width: 100vw;
-    height: 100vh;
-    transition: all 0.5s ease;
+#extra, #flag, #chequered {
+    position: absolute; width: 100vw; height: 100vh;
+    transition: all 0.3s var(--f1-ease, cubic-bezier(0.22,0.61,0.36,1));
     opacity: 1;
 }
+#chequered { background-color: transparent; }
 
-#chequered {
-    background-color: transparent;
-}
-
-.white {
-    background-color: rgb(255, 255, 255) !important;
-}
-
-.green {
-    background-color: rgb(0, 175, 0) !important;
-}
-
-.black {
-    background-color: rgb(0, 0, 0);
-}
-
-.yellow {
-    background-color: rgb(255, 230, 0) !important;
-}
-
-.red {
-    background-color: rgb(209, 0, 0) !important;
-}
-
-.fastest-lap {
-    background-color: rgb(185, 0, 185);
-}
+.white  { background: #fff !important; }
+.green  { background: #00D245 !important; }
+.black  { background: var(--f1-black, #0D0D0F); }
+.yellow { background: #FFF200 !important; }
+.red    { background: var(--f1-red, #E10600) !important; }
+.fastest-lap { background: var(--f1-purple, #9B59B6); }

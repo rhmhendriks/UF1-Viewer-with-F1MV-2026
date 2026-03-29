@@ -1,6 +1,6 @@
-productName: "Ultimate-F1Viewer-With-F1MV"
-appId: "com.mrajeko.uf1"
-copyright: "Copyright © 2023 MRAJEKO"
+productName: "UF1-Viewer-2026"
+appId: "com.mrajeko.uf1.ubuntu2026"
+copyright: "Copyright © 2026 MRAJEKO"
 
 generateUpdatesFilesForAllChannels: true
 asar: true
@@ -12,35 +12,40 @@ buildDependenciesFromSource: false
 directories:
     output: "out"
 
-win:
-    icon: "src/icons/windows/logo.png"
-    target:
-        - target: "nsis"
-          arch:
-              - x64
-              - ia32
-
-mac:
-    category: "public.app-category.utilities"
-    minimumSystemVersion: "10.12.0"
-    icon: "src/icons/windows/logo.png"
-    target:
-        - target: "dmg"
-          arch:
-              - x64
-              - arm64
-
 linux:
     icon: "src/icons/windows/logo.png"
+    category: "Utility"
+    maintainer: "MRAJEKO"
+    description: "Ultimate F1 Viewer – 2026 Season Edition for Ubuntu/Linux"
+    desktop:
+        Name: "UF1 Viewer 2026"
+        GenericName: "Formula 1 Viewer"
+        Comment: "Live timing overlay for Formula 1 – 2026 Season"
+        Categories: "Utility;Sports;"
+        Keywords: "F1;Formula1;Racing;Timing;"
     target:
         - target: "AppImage"
           arch:
               - x64
+              - arm64
+        - target: "deb"
+          arch:
+              - x64
+              - arm64
+        - target: "rpm"
+          arch:
+              - x64
 
-nsis:
-    oneClick: true
-    perMachine: true
-    deleteAppDataOnUninstall: true
+deb:
+    depends:
+        - "libgtk-3-0"
+        - "libnotify4"
+        - "libnss3"
+        - "libxss1"
+        - "libxtst6"
+        - "xdg-utils"
+        - "libatspi2.0-0"
+        - "libsecret-1-0"
 
 appImage:
     category: "Utility"

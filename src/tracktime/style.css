@@ -1,25 +1,26 @@
-* {
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-}
+/* ── Track Time – FOM flat ── */
 
-body {
-    -webkit-app-region: drag;
-}
+* { margin: 0; padding: 0; overflow: hidden; box-sizing: border-box; }
+body { -webkit-app-region: drag; background: transparent; }
 
 .container {
-    background-color: #0a0a0faf;
-    height: 100vh;
-    border-radius: 7vw;
-    display: grid;
-    place-items: center;
+    background: var(--f1-panel, #15151A);
+    height: 100vh; border-radius: 2px;
+    display: grid; place-items: center;
+    position: relative; overflow: hidden;
+}
+
+/* Thin red accent at bottom */
+.container::after {
+    content: ''; position: absolute;
+    bottom: 0; left: 0; right: 0; height: 3px;
+    background: var(--f1-red, #E10600);
 }
 
 p {
-    text-align: center;
-    font-size: 18vw;
-    padding: 5vw;
-    color: white;
-    font-family: "SFBold";
+    text-align: center; font-size: 16vw;
+    padding: 3vw 5vw; color: #fff;
+    font-family: var(--f1-font, "SFBold", Arial, sans-serif);
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums; line-height: 1;
 }

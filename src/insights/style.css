@@ -1,0 +1,119 @@
+/* ── Insights Widget – FOM flat ── */
+
+body {
+    margin: 0; padding: 0;
+    background: transparent;
+    font-family: 'SFRegular', sans-serif;
+    color: #fff;
+    -webkit-app-region: drag;
+    user-select: none;
+}
+
+.panel {
+    background: var(--f1-panel, #15151A);
+    border: 1px solid var(--f1-divider, rgba(255,255,255,0.07));
+    border-radius: 2px;
+    min-height: 100px;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+}
+
+/* ── Header ── */
+.header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px;
+    background: var(--f1-panel-alt, #1B1B22);
+    border-bottom: 1px solid var(--f1-divider, rgba(255,255,255,0.07));
+}
+
+.header-tag {
+    font-family: 'OF1Bold', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    background: var(--f1-red, #E10600);
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 2px;
+    line-height: 1.6;
+}
+
+.header-session {
+    font-family: 'SFMedium', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--f1-text-2, rgba(255,255,255,0.62));
+}
+
+/* ── Cards container ── */
+#cards {
+    flex: 1;
+    overflow-y: auto;
+    padding: 6px;
+    display: flex; flex-direction: column; gap: 4px;
+    -webkit-app-region: no-drag;
+}
+
+#cards::-webkit-scrollbar { width: 3px; }
+#cards::-webkit-scrollbar-track { background: transparent; }
+#cards::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 2px; }
+
+/* ── Single insight card ── */
+.card {
+    background: var(--f1-surface, #222229);
+    border-radius: 2px;
+    padding: 10px 12px;
+    display: flex; flex-direction: column; gap: 4px;
+    border-left: 3px solid var(--f1-gray, #7E7E8A);
+    animation: cardIn 0.3s ease;
+}
+
+@keyframes cardIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Card accent colors by category */
+.card.weather   { border-left-color: #00AAFF; }
+.card.pace      { border-left-color: #A855F7; }
+.card.tires     { border-left-color: #FF8C00; }
+.card.gap       { border-left-color: #00D245; }
+.card.pit       { border-left-color: #FFF200; }
+.card.position  { border-left-color: var(--f1-red, #E10600); }
+
+.card-label {
+    font-family: 'OF1Bold', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--f1-text-3, rgba(255,255,255,0.35));
+}
+
+.card-text {
+    font-family: 'SFRegular', sans-serif;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--f1-text, #fff);
+}
+
+.card-text strong {
+    font-family: 'SFBold', sans-serif;
+}
+
+.card-time {
+    font-family: 'SFRegular', sans-serif;
+    font-size: 9px;
+    color: var(--f1-text-3, rgba(255,255,255,0.35));
+    margin-top: 2px;
+    text-align: right;
+}
+
+/* ── Empty state ── */
+.empty {
+    padding: 30px 14px;
+    text-align: center;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--f1-text-3, rgba(255,255,255,0.35));
+}

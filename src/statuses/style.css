@@ -1,114 +1,62 @@
+/* ── Status Overlay – FOM flat ── */
+
 * {
-    margin: 0;
-    padding: 0;
-    transition: 0.5s all ease;
-    font-family: "SFBold";
-    color: white;
+    margin: 0; padding: 0;
+    transition: all 0.35s var(--f1-ease, cubic-bezier(0.22,0.61,0.36,1));
+    font-family: var(--f1-font, "SFBold", Arial, Helvetica, sans-serif);
+    color: #fff; box-sizing: border-box;
 }
 
-body {
-    -webkit-app-region: drag;
-    height: 100vh;
-    width: 100vw;
-}
+body { -webkit-app-region: drag; height: 100vh; width: 100vw; background: transparent; }
 
 .container {
-    background-color: #0a0a0faf;
+    background: var(--f1-panel, #15151A);
     padding: 3vw;
     height: calc(100vh - 6vw);
-    border-radius: 10vw;
+    border-radius: 2px;
 }
 
 .wrapper {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    flex-direction: column;
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: space-evenly; flex-direction: column;
 }
 
 .status {
-    display: grid;
-    grid-template-columns: 4fr 5fr;
-    place-items: start;
-    width: 90%;
+    display: grid; grid-template-columns: 4fr 5fr;
+    place-items: start; width: 90%;
 }
 
 h1 {
-    padding: 5vw;
-    color: gray;
-    font-size: 10vw;
-    text-align: center;
-    border-radius: 7vw;
-    margin-bottom: 4vw;
+    padding: 4vw;
+    color: var(--f1-text-3, rgba(255,255,255,0.35));
+    font-size: 9vw; letter-spacing: 0.06em;
+    text-align: center; margin-bottom: 4vw; text-transform: uppercase;
 }
 
-.header {
-    width: 100%;
-}
-
+.header { width: 100%; }
 h2 {
-    text-align: center;
-    font-size: 6vw;
-    align-self: center;
+    text-align: center; font-size: 5.5vw;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--f1-text-2, rgba(255,255,255,0.62));
 }
 
 p {
-    white-space: nowrap;
-    width: fit-content;
-    font-size: 5vw;
-    padding: 2vw;
-    border-radius: 3vw;
-    width: 90%;
-    text-align: center;
+    white-space: nowrap; font-size: 5vw;
+    letter-spacing: 0.05em; padding: 2vw 3vw;
+    border-radius: 2px; width: 90%; text-align: center;
 }
 
-.hidden {
-    display: none !important;
-}
+.hidden { display: none !important; }
 
-/* Colors and backgrounds */
-.green {
-    background-color: rgb(0, 175, 0) !important;
-    color: white;
-}
+/* Status colours – solid fills, 3px left accent */
+.green  { background: rgba(0,175,0,0.85) !important; border-left: 3px solid #00D245; color: #fff; }
+.yellow { background: rgba(230,200,0,0.85) !important; border-left: 3px solid #FFF200; color: #000; }
+.orange { background: rgba(220,100,0,0.85) !important; border-left: 3px solid #FF8000; color: #fff; }
+.red    { background: rgba(200,0,0,0.90) !important; border-left: 3px solid var(--f1-red, #E10600); color: #fff; }
+.white  { background: rgba(255,255,255,0.90) !important; border-left: 3px solid #fff; color: #000; }
+.gray   { background: rgba(80,80,90,0.85) !important; border-left: 3px solid var(--f1-gray, #7E7E8A); color: #fff; }
 
-.yellow {
-    background-color: rgb(255, 230, 0) !important;
-    color: black;
-}
+.black-background { background: var(--f1-black, #0D0D0F) !important; }
+.black-text { color: #000 !important; }
 
-.orange {
-    background-color: rgb(255, 123, 0) !important;
-    color: white;
-}
-
-.red {
-    background-color: rgb(209, 0, 0) !important;
-    color: white;
-}
-
-.white {
-    background-color: white;
-    color: black;
-}
-
-.gray {
-    background-color: gray;
-    color: black;
-}
-
-.black-background {
-    background-color: black !important;
-}
-
-.black-text {
-    color: black !important;
-}
-
-.slippery {
-    background-image: url(./slippery.png);
-    background-size: cover;
-    color: black;
-}
+.slippery { background-image: url(./slippery.png); background-size: cover; color: #000; }

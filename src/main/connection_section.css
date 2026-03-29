@@ -1,115 +1,109 @@
-/* Connect menu */
+/* ── Connection Screen – FOM flat ── */
 
 .connections {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    width: 100%; display: flex; flex-direction: column;
+    align-items: center; gap: 10px;
 }
 
 #connect {
-    height: 0vh;
-    width: 100vw;
-    backdrop-filter: blur(1.5rem);
-    background-color: #000000b4;
-    position: fixed;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    overflow: hidden;
-    z-index: 5;
-    justify-content: center;
+    height: 0vh; width: 100vw;
+    background: var(--f1-black, #0D0D0F);
+    position: fixed; display: flex; align-items: center;
+    flex-direction: column; overflow: hidden;
+    z-index: 5; justify-content: center; gap: 0;
 }
 
 #connect h1 {
-    position: absolute;
-    top: 0;
+    position: absolute; top: 0; width: 100%;
+    padding: 28px 0 20px;
+    background: var(--f1-panel, #15151A);
+    border-bottom: 1px solid var(--f1-divider, rgba(255,255,255,0.07));
+    letter-spacing: -0.03em;
 }
 
 #connect .wrapper {
-    height: 70%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    height: auto; width: 100%;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 10px;
 }
 
 #connect .container {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+    width: min(520px, 92%);
+    display: flex; flex-direction: column;
+    gap: 10px; margin: 0 auto;
 }
 
-#connect .text {
-    margin-top: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 2px solid black;
-    background-color: #3030306b;
-    padding: 10px !important;
-    width: 400px;
-    border-radius: 40px;
-}
-
-.connected {
-    color: rgb(94, 255, 94);
-}
-
-.disconnected {
-    color: rgb(255, 62, 62);
-}
-
+.connections .link,
 #connect .link {
-    background-color: transparent;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 10px;
-    transition: all 0.5s ease;
-    font-size: 17px;
-    width: 60%;
-    min-height: 40px;
-    height: 50px;
-    margin: 7.5px;
-    color: white;
-    text-align: center;
-    gap: 10px;
-    border: 2px solid;
+    background: var(--f1-surface, #222229);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 2px;
+    display: flex; align-items: center;
+    justify-content: space-between;
+    padding: 13px 18px; width: 100%;
+    height: auto; min-height: auto;
+    font-size: 11px; letter-spacing: 0.14em;
+    color: var(--f1-gray, #7E7E8A);
+    text-transform: uppercase; gap: 10px;
+    transition: all 0.25s ease;
+    cursor: default; margin: 0; box-sizing: border-box;
 }
 
-#connect .link:hover {
-    transform: translate(3px, 3px);
+#connect button.link {
+    background: var(--f1-surface, #222229);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 2px;
+    color: var(--f1-white, #fff); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+    width: 100%; height: 46px; min-height: 46px;
+    gap: 10px; transition: all 0.25s ease;
+    position: relative; overflow: hidden; margin: 0;
 }
 
-.link.disabled {
-    color: rgba(255, 255, 255, 0.26) !important;
-    border-color: #9f9f9f38 !important;
+#connect button.link::before {
+    content: ''; position: absolute;
+    left: 0; top: 0; bottom: 0; width: 3px;
+    background: var(--f1-red, #E10600);
+    transform: scaleY(0); transition: transform 0.22s ease;
+    transform-origin: center;
 }
+
+#connect button.link:hover {
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(255,255,255,0.18);
+}
+#connect button.link:hover::before { transform: scaleY(1); }
+#connect button.link:active { background: rgba(255,255,255,0.10); transform: translateY(1px); }
+
+.connected    { color: var(--f1-green, #00D245); }
+.disconnected { color: var(--f1-red, #E10600); }
 
 #connect .link.connected {
-    border-color: rgb(94, 255, 94);
+    border-color: rgba(0, 210, 69, 0.25);
+    background: rgba(0, 210, 69, 0.06);
 }
-
-#connect .link.connected span {
-    color: rgb(94, 255, 94);
-}
+#connect .link.connected span { color: var(--f1-green, #00D245); }
 
 #connect .link.disconnected {
-    border-color: rgb(255, 62, 62);
+    border-color: rgba(225, 6, 0, 0.25);
+    background: rgba(225, 6, 0, 0.06);
 }
+#connect .link.disconnected span { color: var(--f1-red, #E10600); }
 
-#connect .link.disconnected span {
-    color: rgb(255, 62, 62);
+.link.disabled {
+    color: rgba(255,255,255,0.18) !important;
+    border-color: rgba(255,255,255,0.04) !important;
+    background: rgba(255,255,255,0.01) !important;
+    pointer-events: none;
 }
 
 .continue {
     all: unset;
-    color: #9f9f9f;
-    background-color: none;
-    margin: 15px;
-    font-size: 15px;
-    position: absolute;
-    bottom: 30px;
+    color: var(--f1-text-3, rgba(255,255,255,0.35));
+    font-size: 11px; letter-spacing: 0.12em;
+    text-transform: uppercase; position: absolute; bottom: 28px;
+    cursor: pointer; transition: color 0.2s;
+    font-family: var(--f1-font-med, "SFMedium", Arial, sans-serif);
 }
+.continue:hover { color: rgba(255,255,255,0.55); }
